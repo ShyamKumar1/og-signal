@@ -1,0 +1,116 @@
+/* Hallmark · shape: signal desk · genre: editorial · theme: locked (design/DESIGN.md) · job: subscribe · hero: 52/48 editorial with live edition console · nav: floating mono · footer: night band · imagery: none supplied · signature: the live edition console
+ * axes: scale · hairlines · mono labels · bands · grain · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P5 H4 E5 S5 R4 V4 · weakest: R, one accent only; cut shadows, secondary accents and decorative dots */
+
+:root {
+  color-scheme: light;
+
+  /* Colour */
+  --paper: #f7f8f1;
+  --paper-band: #eef1e2;
+  --paper-deep: #e5ebd4;
+  --card: #fffefc;
+  --ink: #14170f;
+  --ink-soft: #3f4436;
+  --ink-mute: #6c7360;
+  --line: #e2e2d5;
+  --line-soft: #eee8dc;
+  --accent: #b65916;
+  --accent-ink: #a84f10;
+  --sage-deep: #3c4c38;
+  --sage: #7a9268;
+  --blue: #157a8e;
+  --cream: #d5b595;
+  --night: #151e19;
+  --night-card: #1d2822;
+  --night-ink: #f3f4ec;
+  --night-mute: #a8b3a2;
+  --night-line: rgba(243, 244, 236, 0.14);
+
+  /* Derived surfaces */
+  --chip-cream-bg: #f3eadf;
+  --chip-cream-ink: #6b4a2d;
+  --chip-sage-bg: #e7eddc;
+  --chip-sage-ink: #3c4c38;
+  --overlay: rgba(20, 23, 15, 0.44);
+  --wash: color-mix(in srgb, var(--paper-deep) 72%, transparent);
+  --grain-opacity: 0.035;
+
+  /* Type */
+  --font-display: "Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Rethink Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --text-display: clamp(2.5rem, 1.747rem + 3.21vw, 5rem);
+  --text-h2: clamp(1.75rem, 1.6vw + 1.125rem, 2.875rem);
+  --text-h3: clamp(1.25rem, 0.4vw + 1.15rem, 1.5rem);
+  --text-body: 1.0625rem;
+  --text-lead: clamp(1.125rem, 0.35vw + 1.06rem, 1.25rem);
+  --text-ui: 0.875rem;
+  --text-label: 0.6875rem;
+  --text-micro: 0.625rem;
+
+  --leading-display: 1.02;
+  --leading-head: 1.08;
+  --leading-body: 1.65;
+
+  /* Space and layout */
+  --container: 1360px;
+  --gutter: clamp(20px, 4vw, 40px);
+  --column-gap: 24px;
+  --section-y: clamp(64px, 8vw, 128px);
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --measure: 68ch;
+  --margin-col: 220px;
+  --header-h: 76px;
+  --header-h-sm: 64px;
+
+  /* Shape and motion */
+  --radius-card: 20px;
+  --radius-inner: 14px;
+  --radius-pill: 999px;
+  --radius-small: 8px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --duration: 280ms;
+  --duration-slow: 550ms;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --paper: #14170f;
+  --paper-band: #181c13;
+  --paper-deep: #20261a;
+  --card: #1b1f16;
+  --ink: #f3f4ec;
+  --ink-soft: #c8cdbf;
+  --ink-mute: #9aa28f;
+  --line: #2c3327;
+  --line-soft: #242b20;
+  --accent: #d9772f;
+  --accent-ink: #e28a48;
+  --sage-deep: #a8c294;
+  --sage: #7a9268;
+  --blue: #5bb4c6;
+  --cream: #8a6a4c;
+  --night: #0d1310;
+  --night-card: #141d17;
+  --night-ink: #f3f4ec;
+  --night-mute: #a8b3a2;
+  --night-line: rgba(243, 244, 236, 0.16);
+
+  --chip-cream-bg: #2a2318;
+  --chip-cream-ink: #d8b892;
+  --chip-sage-bg: #202a1c;
+  --chip-sage-ink: #b7cfa6;
+  --overlay: rgba(5, 8, 6, 0.62);
+  --wash: color-mix(in srgb, var(--paper-deep) 64%, transparent);
+  --grain-opacity: 0.05;
+}

@@ -1,0 +1,511 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Kicker from '../components/Kicker.astro';
+import SectionHead from '../components/SectionHead.astro';
+import StatStrip from '../components/StatStrip.astro';
+import StoryRow from '../components/StoryRow.astro';
+import EditionConsole from '../components/EditionConsole.astro';
+import { CHANNEL_LIST, CHANNELS, EDITION_ORDER, EDITIONS, SITE, type EditionSlug } from '../lib/site';
+import { fmtStamp, fmtTime, isoDay, pad } from '../lib/format';
+
+const stories = (await getCollection('stories'))
+  .filter((entry) => !entry.data.draft)
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+
+const todayKey = isoDay(new Date());
+const todays = stories.filter((entry) => isoDay(entry.data.publishedAt) === todayKey);
+const lead = stories.find((entry) => entry.data.lead) ?? stories[0];
+const latest = stories.filter((entry) => entry !== lead).slice(0, 8);
+
+const sourceCount = new Set(todays.flatMap((entry) => entry.data.sources.map((source) => source.url))).size;
+const channelsCovered = new Set(stories.map((entry) => entry.data.channel)).size;
+const editionsFiled = new Set(stories.map((entry) => `${isoDay(entry.data.publishedAt)}-${entry.data.edition}`)).size;
+
+const istHour = Number(
+  new Intl.DateTimeFormat('en-GB', { hour: '2-digit', hour12: false, timeZone: SITE.timezone }).format(new Date()),
+);
+const nextEdition: EditionSlug = istHour < 6 ? 'morning' : istHour < 14 ? 'afternoon' : istHour < 22 ? 'night' : 'morning';
+const nextEditionTomorrow = istHour >= 22;
+const nextLabel = EDITIONS[nextEdition].label;
+const nextCut = EDITIONS[nextEdition].cut;
+
+const editionRows = EDITION_ORDER.map((slug) => ({
+  short: pad(EDITION_ORDER.indexOf(slug) + 1),
+  label: EDITIONS[slug].label.replace(' Edition', ''),
+  cut: EDITIONS[slug].cut,
+  count: todays.filter((entry) => entry.data.edition === slug).length,
+  current: slug === nextEdition,
+}));
+
+const consoleHeadline = `${nextEditionTomorrow ? 'Tomorrow' : 'Today'} · ${nextLabel}`;
+const consoleStatus = todays.length > 0 ? `next edition ${nextCut} IST` : 'no copy filed';
+
+const lastUpdated = stories[0]?.data.updatedAt ?? stories[0]?.data.publishedAt;
+const heroStamp = lastUpdated ? `Updated ${fmtStamp(lastUpdated)}` : `Desk open · ${fmtStamp(new Date())}`;
+const heroCheck = stories.length > 0 ? 'Every claim checked against primary sources' : 'No edition filed yet';
+
+const firstBlock = (lead?.body ?? '')
+  .trim()
+  .split(/\n{2,}/)
+  .find((block) => {
+    const line = block.trim();
+    return (
+      line.length > 0 &&
+      !line.startsWith('#') &&
+      !line.startsWith('>') &&
+      !line.startsWith('-') &&
+      !line.startsWith('|') &&
+      !line.startsWith('```')
+    );
+  });
+const leadExcerpt = (firstBlock ?? '')
+  .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+  .replace(/[*_`]/g, '')
+  .replace(/\s+/g, ' ')
+  .trim();
+
+const channelCounts = CHANNEL_LIST.map((channel) => ({
+  ...channel,
+  count: stories.filter((entry) => entry.data.channel === channel.slug).length,
+}));
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE.title,
+  url: SITE.url,
+  description: SITE.description,
+  inLanguage: 'en-IN',
+  publisher: { '@type': 'Organization', name: SITE.owner, url: SITE.url },
+};
+---
+
+<Base title={SITE.title} description={SITE.description} schema={schema}>
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <Kicker
+          label="Live"
+          text={`${todays.length} ${todays.length === 1 ? 'story' : 'stories'} today`}
+          href={stories.length === 1 ? '/editions' : '#latest'}
+        />
+
+        <h1 class={lead ? 'hero__title hero__title--story' : 'hero__title'}>
+          {lead ? lead.data.title : 'The AI desk that cites its sources.'}
+        </h1>
+
+        <p class="lede">{lead ? lead.data.dek : SITE.tagline}</p>
+
+        <p class="hero__meta">
+          <span>{heroStamp}</span>
+          <span>{heroCheck}</span>
+        </p>
+
+        <div class="hero__actions">
+          {lead ? (
+            <a class="btn btn--primary" href={`/story/${lead.id}`}>
+              Read the lead story
+            </a>
+          ) : (
+            <a class="btn btn--primary" href="/rss.xml">
+              Subscribe via RSS
+            </a>
+          )}
+          <a class="link-arrow" href="/editions">
+            All editions
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="hero__console">
+        <EditionConsole
+          headline={consoleHeadline}
+          editions={editionRows}
+          sources={sourceCount}
+          status={consoleStatus}
+          statusTone={todays.length > 0 ? 'sage' : 'line'}
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="container">
+      <StatStrip
+        items={[
+          { label: 'Stories today', value: todays.length },
+          { label: 'Sources cited today', value: sourceCount },
+          { label: 'Channels covered', value: `${channelsCovered}/${CHANNEL_LIST.length}` },
+          { label: 'Editions filed', value: editionsFiled },
+        ]}
+      />
+    </div>
+  </section>
+
+  {lead && (
+    <section class="section lead-section" aria-labelledby="lead-heading">
+      <div class="container">
+        <div class="lead-block">
+          <div class="lead-block__main">
+            <h2 id="lead-heading"><a href={`/story/${lead.id}`}>{lead.data.title}</a></h2>
+            <p class="lead-dek">{lead.data.dek}</p>
+            <p class="lead-meta">
+              <span>{CHANNELS[lead.data.channel].label}</span>
+              <span>{EDITIONS[lead.data.edition].label}</span>
+              <span>{lead.data.readingTime} min read</span>
+              <span>{fmtTime(lead.data.publishedAt)} IST</span>
+            </p>
+            {leadExcerpt && <p class="lead-excerpt">{leadExcerpt}</p>}
+            <a class="link-arrow" href={`/story/${lead.id}`}>
+              Read the story
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  {(stories.length === 0 || latest.length > 0) && (
+    <section class="section section--tight" id="latest" aria-labelledby="latest-heading">
+      <div class="container">
+        <SectionHead
+          title="Latest"
+          id="latest-heading"
+          action={stories.length > 0 ? { href: '/editions', label: 'All editions' } : undefined}
+        />
+
+        {stories.length === 0 ? (
+          <p class="empty-note">
+            No stories filed yet. The next edition files at {nextCut} IST.
+          </p>
+        ) : (
+          <ol class="rows">
+            {latest.map((story, index) => (
+              <StoryRow story={story} index={index + 1} />
+            ))}
+          </ol>
+        )}
+      </div>
+    </section>
+  )}
+
+  <section class="section band" id="channels" aria-labelledby="channels-heading">
+    <div class="container">
+      <SectionHead title="Channels" id="channels-heading" />
+
+      <ol class="rows">
+        {channelCounts.map((channel, index) => (
+          <li class="channel-row" data-reveal style={`--i:${index}`}>
+            <a href={`/channel/${channel.slug}`}>
+              <span class="channel-row__index" aria-hidden="true">{pad(index + 1)}</span>
+              <span class="channel-row__main">
+                <span class="channel-row__title">{channel.label}</span>
+                <span class="channel-row__blurb">{channel.blurb}</span>
+              </span>
+              <span class="channel-row__meta">
+                {channel.count} {channel.count === 1 ? 'story' : 'stories'}
+                <span aria-hidden="true">→</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="cta-band" aria-labelledby="cta-heading">
+    <div class="container cta-band__inner">
+      <div>
+        <h2 id="cta-heading">{nextEditionTomorrow ? 'Tomorrow' : 'Today'}, {nextCut} IST.</h2>
+        <p class="cta-band__copy">Three editions a day, each one checked against primary sources before it files.</p>
+      </div>
+      <a class="btn btn--invert" href="/rss.xml">
+        Subscribe
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---------- hero ---------- */
+
+  .hero {
+    position: relative;
+    overflow: clip;
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: -10% -10% auto;
+    height: 90%;
+    background: radial-gradient(58% 62% at 68% 32%, var(--wash) 0%, transparent 72%);
+    pointer-events: none;
+  }
+
+  .hero__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+    gap: clamp(32px, 5vw, 88px);
+    align-items: center;
+    padding-block: clamp(40px, 7vw, 104px) clamp(48px, 8vw, 112px);
+  }
+
+  .hero__copy {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-5);
+  }
+
+  .hero__copy h1 {
+    max-width: 18ch;
+  }
+
+  .hero__title--story {
+    font-size: clamp(32px, 3.15vw + 8px, 58px);
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    max-width: 22ch;
+  }
+
+  .hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+    max-width: none;
+    color: var(--ink-mute);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-5);
+    padding-top: var(--space-3);
+  }
+
+  .hero__console {
+    display: grid;
+    gap: var(--space-3);
+    min-width: 0;
+  }
+
+  /* ---------- stats ---------- */
+
+  .stats {
+    padding-bottom: clamp(32px, 4vw, 56px);
+  }
+
+  /* ---------- lead ---------- */
+
+  .lead-section {
+    padding-top: clamp(48px, 6vw, 88px);
+  }
+
+  .lead-block {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: var(--space-5);
+  }
+
+  .lead-block__main {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-4);
+    max-width: 900px;
+  }
+
+  .lead-block h2 {
+    font-size: clamp(1.9rem, 2.4vw + 1rem, 3.25rem);
+    line-height: 1.06;
+    max-width: 22ch;
+  }
+
+  .lead-block h2 a {
+    transition: color var(--duration) var(--ease);
+  }
+
+  .lead-block h2 a:hover {
+    color: var(--accent);
+  }
+
+  .lead-dek {
+    max-width: 58ch;
+    font-size: var(--text-lead);
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+
+  .lead-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    max-width: none;
+    color: var(--ink-mute);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .lead-excerpt {
+    max-width: 56ch;
+    padding-left: var(--space-5);
+    border-left: 1px solid var(--line);
+    color: var(--ink-mute);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+  }
+
+  /* ---------- empty ---------- */
+
+  .empty-note {
+    max-width: none;
+    padding-block: var(--space-6);
+    color: var(--ink-mute);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* ---------- channels ---------- */
+
+  .channel-row a {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 160px;
+    gap: var(--space-4);
+    align-items: baseline;
+    padding-block: var(--space-5);
+    transition: background-color var(--duration) var(--ease);
+  }
+
+  .channel-row a:hover {
+    background: color-mix(in srgb, var(--paper) 60%, transparent);
+  }
+
+  .channel-row__index {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+  }
+
+  .channel-row__main {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .channel-row__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 0.6vw + 1.1rem, 1.6rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  .channel-row__blurb {
+    max-width: 60ch;
+    font-size: var(--text-ui);
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+
+  .channel-row__meta {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .channel-row__meta span {
+    transition: transform var(--duration) var(--ease);
+  }
+
+  .channel-row a:hover .channel-row__meta span {
+    transform: translateX(3px);
+  }
+
+  /* ---------- cta ---------- */
+
+  .cta-band {
+    background: var(--night);
+    color: var(--night-ink);
+    border-top: 1px solid var(--night-line);
+  }
+
+  .cta-band__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding-block: clamp(40px, 5vw, 64px);
+  }
+
+  .cta-band h2 {
+    color: var(--night-ink);
+    font-size: clamp(1.75rem, 2vw + 1rem, 2.75rem);
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+
+  .cta-band__copy {
+    max-width: 48ch;
+    margin-top: var(--space-3);
+    color: var(--night-mute);
+    font-size: var(--text-ui);
+  }
+
+  /* ---------- responsive ---------- */
+
+  @media (max-width: 960px) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-6);
+    }
+
+    .hero__copy h1 {
+      max-width: 18ch;
+    }
+
+    .hero__console {
+      max-width: 560px;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .channel-row a {
+      grid-template-columns: 32px minmax(0, 1fr);
+      gap: var(--space-3);
+    }
+
+    .channel-row__meta {
+      grid-column: 2;
+      justify-content: flex-start;
+      padding-top: 4px;
+    }
+
+    .lead-excerpt {
+      padding-left: var(--space-4);
+    }
+  }
+</style>

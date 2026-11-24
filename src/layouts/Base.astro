@@ -1,0 +1,126 @@
+---
+/**
+ * Base — document shell.
+ * Props: title?, description?, ogTitle?, canonical?, schema? (JSON-LD object), slug? (story slug for /og/<slug>.svg).
+ * Named slots: "head" (extra head tags), "schema" (extra JSON-LD).
+ */
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../lib/site';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogTitle?: string;
+  canonical?: string;
+  schema?: Record<string, unknown>;
+  slug?: string;
+}
+
+const {
+  title = `${SITE.title} — ${SITE.tagline}`,
+  description = SITE.description,
+  ogTitle = title,
+  canonical = new URL(Astro.url.pathname, SITE.url).href,
+  schema,
+  slug,
+} = Astro.props;
+
+const ogImage = slug ? new URL(`/og/${slug}.svg`, SITE.url).href : undefined;
+
+const documentTitle = title === SITE.title ? SITE.title : `${title} · ${SITE.title}`;
+const socialTitle = ogTitle === title ? documentTitle : ogTitle;
+const schemaJson = schema ? JSON.stringify(schema).replace(/</g, '\\u003c') : null;
+const locale = SITE.locale.replace('_', '-');
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{documentTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.title} />
+    <meta property="og:locale" content={locale} />
+    <meta property="og:title" content={socialTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    {ogImage && <meta property="og:image:type" content="image/svg+xml" />}
+    {ogImage && <meta property="og:image:width" content="1200" />}
+    {ogImage && <meta property="og:image:height" content="630" />}
+    {ogImage && <meta property="og:image:alt" content={title} />}
+
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={socialTitle} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    <meta name="theme-color" content="#f7f8f1" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14170f" media="(prefers-color-scheme: dark)" />
+
+    {schemaJson && <script type="application/ld+json" set:html={schemaJson} />}
+    <slot name="head" />
+    <slot name="schema" />
+
+    <ClientRouter />
+
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem('og-theme');
+          if (stored === 'dark') document.documentElement.dataset.theme = 'dark';
+        } catch (error) {
+          /* no storage: follow the system on the next visit */
+        }
+        document.documentElement.classList.add('js');
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+      const initReveal = () => {
+        const items = document.querySelectorAll<HTMLElement>('[data-reveal]:not(.is-in)');
+        if (items.length === 0) return;
+
+        if (reduceMotion.matches || !('IntersectionObserver' in window)) {
+          items.forEach((item) => item.classList.add('is-in'));
+          return;
+        }
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add('is-in');
+              observer.unobserve(entry.target);
+            });
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
+        );
+
+        items.forEach((item) => observer.observe(item));
+      };
+
+      document.addEventListener('astro:page-load', initReveal);
+      if (document.readyState !== 'loading') initReveal();
+      else document.addEventListener('DOMContentLoaded', initReveal);
+    </script>
+  </body>
+</html>

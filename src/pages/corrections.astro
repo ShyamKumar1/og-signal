@@ -1,0 +1,92 @@
+---
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import Base from '../layouts/Base.astro';
+
+const raw = (() => {
+  try {
+    return readFileSync(join(process.cwd(), 'src/content/corrections.md'), 'utf8');
+  } catch {
+    return '';
+  }
+})();
+
+const entries = raw
+  .split('\n')
+  .map((line) => line.trim())
+  .filter((line) => line.startsWith('- '))
+  .map((line) => {
+    const text = line.slice(2);
+    const [date, ...rest] = text.split('—').map((s) => s.trim());
+    return { date: date ?? '', note: rest.join(' — ') };
+  });
+---
+
+<Base
+  title="Corrections"
+  description="Every correction made to a published story, with the date and what changed."
+>
+  <section class="section">
+    <div class="container">
+      <header class="page-head">
+        <p class="label">Corrections</p>
+        <h1>Corrections, in public.</h1>
+        <p class="lede">
+          A record of what was wrong and what changed. Corrections are made on the page and logged
+          here on the same day.
+        </p>
+      </header>
+
+      {entries.length === 0 ? (
+        <p class="empty-note">No corrections filed.</p>
+      ) : (
+        <ul class="corrections-list">
+          {entries.map((entry) => (
+            <li>
+              <span class="mono">{entry.date}</span>
+              <span>{entry.note}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div class="prose">
+        <h2>Reporting an error</h2>
+        <p>
+          If a figure, name or date is wrong, the fastest route is an issue on the repository behind
+          this site. Each one is checked against the fact pack for that edition and, where the copy is
+          wrong, corrected with the change noted here.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .corrections-list {
+    list-style: none;
+    margin: 0 0 var(--space-6);
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .corrections-list li {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: var(--space-3);
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .corrections-list .mono {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    color: var(--ink-mute);
+    letter-spacing: 0.06em;
+  }
+  @media (max-width: 560px) {
+    .corrections-list li {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+  }
+</style>

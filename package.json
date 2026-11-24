@@ -1,0 +1,22 @@
+{
+  "name": "og-signal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && pagefind --site dist",
+    "build:only": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.6",
+    "astro": "^7.4.13",
+    "pagefind": "^1.6.0"
+  },
+  "devDependencies": {
+    "js-yaml": "^5.5.0"
+  }
+}

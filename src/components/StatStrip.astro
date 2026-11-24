@@ -1,0 +1,99 @@
+---
+/**
+ * StatStrip — four (or more) desk figures divided by hairlines.
+ * Props: items ({ label, value, note? }[]). Values must come from real data.
+ */
+interface Props {
+  items: { label: string; value: string | number; note?: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<dl class="stat-strip">
+  {items.map((item) => (
+    <div class="stat-strip__cell">
+      <dt>{item.label}</dt>
+      <dd>{item.value}</dd>
+      {item.note && <p class="stat-strip__note">{item.note}</p>}
+    </div>
+  ))}
+</dl>
+
+<style>
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-block: 1px solid var(--line);
+  }
+
+  .stat-strip__cell {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: clamp(20px, 2.4vw, 32px) clamp(16px, 2vw, 28px);
+    border-left: 1px solid var(--line);
+  }
+
+  .stat-strip__cell:first-child {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .stat-strip dt {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .stat-strip dd {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3vw, 3.25rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-strip__note {
+    max-width: none;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: var(--ink-mute);
+  }
+
+  @media (max-width: 860px) {
+    .stat-strip {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stat-strip__cell:nth-child(3) {
+      border-left: 0;
+      padding-left: 0;
+    }
+
+    .stat-strip__cell:nth-child(n + 3) {
+      border-top: 1px solid var(--line);
+    }
+  }
+
+  @media (max-width: 420px) {
+    .stat-strip {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .stat-strip__cell {
+      border-left: 0;
+      padding-left: 0;
+    }
+
+    .stat-strip__cell + .stat-strip__cell {
+      border-top: 1px solid var(--line);
+    }
+  }
+</style>

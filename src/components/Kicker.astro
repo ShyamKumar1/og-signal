@@ -1,0 +1,84 @@
+---
+/**
+ * Kicker — small status line for the top of a page or block.
+ * Props: label (pill text, e.g. "LIVE"), text, href? (renders a link when set).
+ */
+interface Props {
+  label: string;
+  text: string;
+  href?: string;
+}
+const { label, text, href } = Astro.props;
+const Tag = href ? 'a' : 'div';
+---
+
+<Tag class="kicker" href={href}>
+  <span class="kicker__label">{label}</span>
+  <span class="kicker__text">{text}</span>
+  {href && <span class="kicker__arrow" aria-hidden="true">→</span>}
+</Tag>
+
+<style>
+  .kicker {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 30px;
+    padding: 0 14px 0 4px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    color: var(--ink);
+    font-size: var(--text-ui);
+    line-height: 1;
+    width: fit-content;
+  }
+
+  a.kicker::after {
+    content: "";
+    position: absolute;
+    inset: -7px 0;
+  }
+
+  .kicker__label {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 9px;
+    background: var(--ink);
+    color: var(--card);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .kicker__text {
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .kicker__arrow {
+    color: var(--ink-mute);
+    transition: transform var(--duration) var(--ease);
+  }
+
+  a.kicker:hover .kicker__arrow {
+    transform: translateX(2px);
+  }
+
+  @media (max-width: 420px) {
+    .kicker__text {
+      white-space: normal;
+    }
+
+    .kicker {
+      height: auto;
+      min-height: 30px;
+      padding-block: 4px;
+    }
+  }
+</style>

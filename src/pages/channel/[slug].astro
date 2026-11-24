@@ -1,0 +1,87 @@
+---
+/**
+ * Channel — every published story in one of the four channels.
+ * Static paths over CHANNEL_LIST; links to the channel's RSS feed.
+ */
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Kicker from '../../components/Kicker.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import StoryRow from '../../components/StoryRow.astro';
+import { CHANNEL_LIST, SITE } from '../../lib/site';
+
+export function getStaticPaths() {
+  return CHANNEL_LIST.map((channel) => ({
+    params: { slug: channel.slug },
+    props: { channel },
+  }));
+}
+
+interface Props {
+  channel: (typeof CHANNEL_LIST)[number];
+}
+
+const { channel } = Astro.props;
+const position = CHANNEL_LIST.findIndex((entry) => entry.slug === channel.slug) + 1;
+
+const stories = (await getCollection('stories'))
+  .filter((entry) => !entry.data.draft && entry.data.channel === channel.slug)
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+
+const sourceCount = new Set(stories.flatMap((entry) => entry.data.sources.map((source) => source.url))).size;
+const feed = `/channel/${channel.slug}/rss.xml`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: `${channel.label} · ${SITE.title}`,
+  url: new URL(Astro.url.pathname, SITE.url).href,
+  description: channel.blurb,
+  isPartOf: { '@type': 'WebSite', name: SITE.title, url: SITE.url },
+};
+---
+
+<Base title={channel.label} description={channel.blurb} schema={schema}>
+  <Fragment slot="head">
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.title} · ${channel.label}`} href={feed} />
+  </Fragment>
+
+  <section class="channel">
+    <div class="container">
+      <header class="page-head">
+        <Kicker label={channel.short} text={`Channel 0${position} of 0${CHANNEL_LIST.length}`} />
+        <h1>{channel.label}</h1>
+        <p class="lede">{channel.blurb}</p>
+        <p class="page-head__meta">
+          <span>{stories.length} {stories.length === 1 ? 'story' : 'stories'}</span>
+          <span>{sourceCount} sources linked</span>
+          <span>Files in IST</span>
+        </p>
+        <div class="page-head__actions">
+          <a class="link-arrow" href={feed}>
+            {channel.short} RSS feed
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </header>
+
+      <SectionHead title={`Filed in ${channel.short}`} label="Newest first" />
+
+      {stories.length === 0 ? (
+        <p class="empty-note">No stories filed in this channel yet.</p>
+      ) : (
+        <ol class="rows">
+          {stories.map((story, index) => (
+            <StoryRow story={story} index={index + 1} />
+          ))}
+        </ol>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .channel {
+    padding-bottom: var(--section-y);
+  }
+</style>

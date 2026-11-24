@@ -1,0 +1,152 @@
+---
+/**
+ * Footer — night band with the desk promise, RSS pill, and four mono link columns.
+ * No props. Links point at the routes planned in Section 2.
+ */
+import { CHANNEL_LIST, EDITION_ORDER, EDITIONS, SITE } from '../lib/site';
+
+const year = new Date().getFullYear();
+
+const columns = [
+  {
+    title: 'Channels',
+    links: CHANNEL_LIST.map((channel) => ({ href: `/channel/${channel.slug}`, label: channel.label })),
+  },
+  {
+    title: 'Editions',
+    links: EDITION_ORDER.map((slug) => ({ href: `/editions`, label: EDITIONS[slug].label })),
+  },
+  {
+    title: 'Desk',
+    links: [
+      { href: '/about', label: 'About' },
+      { href: '/editorial', label: 'Editorial standards' },
+      { href: '/corrections', label: 'Corrections' },
+      { href: '/search', label: 'Search' },
+    ],
+  },
+  {
+    title: 'Feeds',
+    links: [
+      { href: '/rss.xml', label: 'All stories' },
+      { href: '/channel/ai/rss.xml', label: 'AI feed' },
+      { href: '/api/stories.json', label: 'JSON' },
+    ],
+  },
+] as const;
+---
+
+<footer class="site-footer" data-pagefind-ignore>
+  <div class="container">
+    <div class="footer-cta">
+      <h2>Three editions. Every claim sourced.</h2>
+      <a class="btn btn--invert" href="/rss.xml">
+        Subscribe via RSS
+      </a>
+    </div>
+
+    <div class="footer-grid">
+      {columns.map((column) => (
+        <div class="footer-col">
+          <h3>{column.title}</h3>
+          <ul>
+            {column.links.map((link) => (
+              <li><a href={link.href}>{link.label}</a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <div class="footer-base">
+      <span>© {year} {SITE.owner}</span>
+      <span>{SITE.title} files in IST, Asia/Kolkata</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--night);
+    color: var(--night-ink);
+    padding-block: clamp(64px, 10vw, 160px) 0;
+  }
+
+  .footer-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding-bottom: clamp(40px, 5vw, 72px);
+    border-bottom: 1px solid var(--night-line);
+  }
+
+  .footer-cta h2 {
+    max-width: 16ch;
+    color: var(--night-ink);
+    font-size: clamp(2rem, 1.4vw + 1.6rem, 3.25rem);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-6);
+    padding-block: clamp(40px, 5vw, 64px);
+  }
+
+  .footer-col h3 {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--night-mute);
+    margin-bottom: var(--space-4);
+  }
+
+  .footer-col ul {
+    display: grid;
+    gap: 2px;
+  }
+
+  .footer-col a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--text-ui);
+    color: var(--night-ink);
+    transition: color var(--duration) var(--ease);
+  }
+
+  .footer-col a:hover {
+    color: var(--cream);
+  }
+
+  .footer-base {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--night-line);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--night-mute);
+  }
+
+  @media (max-width: 900px) {
+    .footer-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-6) var(--space-5);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .footer-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

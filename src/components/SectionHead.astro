@@ -1,0 +1,97 @@
+---
+/**
+ * SectionHead — section title with an optional mono label and trailing action.
+ * Props: title, label?, action? ({ href, label }), id?.
+ * The label is used at most once per section; never stack it above every heading.
+ */
+interface Props {
+  title: string;
+  label?: string;
+  action?: { href: string; label: string };
+  id?: string;
+}
+const { title, label, action, id } = Astro.props;
+---
+
+<div class="section-head">
+  <div class="section-head__lead">
+    {label && <p class="section-head__label">{label}</p>}
+    <h2 id={id}>{title}</h2>
+  </div>
+  {action && (
+    <a class="section-head__action" href={action.href}>
+      {action.label}
+      <span aria-hidden="true">→</span>
+    </a>
+  )}
+</div>
+
+<style>
+  .section-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-3) var(--space-5);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: var(--space-5);
+  }
+
+  .section-head__lead {
+    display: grid;
+    gap: 10px;
+  }
+
+  .section-head__label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    max-width: none;
+    color: var(--ink-mute);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .section-head__label::before {
+    content: "";
+    width: 24px;
+    height: 1px;
+    background: currentColor;
+    flex: none;
+  }
+
+  .section-head h2 {
+    font-size: clamp(1.6rem, 1.4vw + 1.1rem, 2.25rem);
+  }
+
+  .section-head__action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color var(--duration) var(--ease);
+  }
+
+  .section-head__action span {
+    transition: transform var(--duration) var(--ease);
+  }
+
+  .section-head__action:hover {
+    color: var(--accent);
+  }
+
+  .section-head__action:hover span {
+    transform: translateX(2px);
+  }
+</style>

@@ -1,0 +1,147 @@
+{
+  "edition": "morning",
+  "date": "2026-11-25",
+  "timezone": "Asia/Kolkata",
+  "note": "Every fact below is taken from the source listed. Do not add facts not present here. If a number is not here, do not state it.",
+  "derived": [
+    "Revenue grew 46.7% between Q2 and Q3 (16956 / 11555 = 1.467); the copy may say about 47%.",
+    "Compute and infrastructure expense grew 77.5% (9863 / 5558 = 1.775); the copy may say about 77%.",
+    "Revenue increase was 5401 and expense increase was 4305, so 79.7% of the increase went to compute expense; the copy may say about 80%.",
+    "451600 is 26.6 times 16956; the copy may say more than 26 times.",
+    "58.2 minus 48.1 is 10.1 percentage points.",
+    "Astra at 8 input and 40 output is 20% below 10 and 50; 111.50 is 34% above 83; 97.17 is 17% above 83."
+  ],
+  "stories": [
+    {
+      "slug": "open-weight-models-554b-and-5-9gb-same-day",
+      "channel": "llm",
+      "lead": true,
+      "angle": "Two labs shipped open-weight models on the same day at opposite ends of the size spectrum: one memory-native 554B, one ternary 5.9GB that runs on a phone. The story is the pincer, not either model.",
+      "facts": [
+        "MemTensor released and open-sourced MemT-1.0-Pro on 24 November 2026, jointly developed with NVIDIA.",
+        "MemT-1.0-Pro is 554 billion total parameters with 59 billion active parameters.",
+        "It is built on NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16 as its backbone, trained with NVIDIA Megatron-Core and Megatron Bridge.",
+        "Its architecture combines dynamic local memory, which stores information acquired during interaction, with trainable hyper-memory components that learn how to write and read that information.",
+        "Scores 41.80 on BEAM-1M versus 37.04 for MemT-1.0-Flash, a 4.76 point improvement.",
+        "Scores 23.87 on MemoryAgentBench versus 17.36 for MemT-1.0-Flash, a 6.51 point improvement.",
+        "It follows MemTensor's earlier Nano and Flash releases.",
+        "PrismML announced Ternary Bonsai 2.5 27B on 24 November 2026 from Pasadena, California.",
+        "Ternary Bonsai 2.5 27B is based on Qwen 3.8 27B, sits at 5.9GB of memory, and uses ternary weights.",
+        "Across agentic coding benchmarks (SWE-bench Verified, DeepSWE v1.1, Terminal-Bench 2.1) it averaged 54.2 versus 37.9 for Ternary Bonsai 2 27B.",
+        "Across agentic tool-calling benchmarks (AppWorld and tau-3-Bench) it averaged 82.2 versus 60.2 for its predecessor.",
+        "It runs on NVIDIA and Intel GPUs through llama.cpp, and on Apple devices including Mac, iPhone and iPad through MLX.",
+        "It is released under Apache 2.0 and downloadable free from 24 November 2026."
+      ],
+      "sources": [
+        { "title": "MemTensor Releases and Open-Sources MemT-1.0-Pro, a 554B Memory-Native Model", "url": "https://technode.global/prnasia/memtensor-releases-and-open-sources-memt-1-0-pro-a-554b-memory-native-model", "publisher": "TNGlobal / PR Newswire", "published": "2026-11-24" },
+        { "title": "PrismML Launches Ternary Bonsai 2.5 27B for Agentic Coding and Private Knowledge Work", "url": "https://prismml.com/news/prismml-launches-ternary-bonsai-2-5-27b", "publisher": "PrismML", "published": "2026-11-24" }
+      ]
+    },
+    {
+      "slug": "xpeng-worldgpt-one-model-six-machines",
+      "channel": "ai",
+      "lead": false,
+      "angle": "A carmaker's world model that claims to transfer across boats, drones and humanoids. Treat the benchmark claims as company claims, and note why a shared physical-world model matters for robotics.",
+      "facts": [
+        "XPENG unveiled WorldGPT, announced 24 November 2026 in Guangzhou, China.",
+        "WorldGPT brings together AI learning across six types of machines: cars, boats, drones, single-arm robots, dual-arm robots and humanoid robots.",
+        "The model can predict future scenarios, plan actions and support development of AI systems across different machines.",
+        "XPENG says WorldGPT achieved 12 first-place results across public benchmarks in autonomous driving, robotics, visual understanding and video generation.",
+        "XPENG says it is the first world model to demonstrate prediction and action-planning capabilities across all six types of machines.",
+        "It is developed as part of the XPENG Turing World Model family and is presented as part of XPENG's Physical AI work."
+      ],
+      "sources": [
+        { "title": "XPENG WorldGPT: One Model for Cars, Robots, Drones", "url": "https://xpeng.com/pressroom/news/01a20bcf44b3a1e838d68a02a2110153", "publisher": "XPENG", "published": "2026-11-24" }
+      ]
+    },
+    {
+      "slug": "sambanova-supermicro-10000-inference-chips",
+      "channel": "technology",
+      "lead": false,
+      "angle": "Inference silicon is splitting away from training GPUs, and the buyer for the first batch is neoclouds and sovereign clouds. This is the physical layer behind the price war.",
+      "facts": [
+        "SambaNova and Supermicro announced a strategic collaboration, reported 24 November 2026.",
+        "The collaboration initially plans for 10,000 SN50 RDU chips from SambaNova.",
+        "The systems are disaggregated inference systems that combine RDUs and GPUs, part of Supermicro's Data Center Building Block Solutions portfolio.",
+        "Supermicro will integrate, test, deliver and support the systems, including on-site service.",
+        "SambaNova engineers will get models running and tuned on SN50 and help Supermicro with deployments.",
+        "The companies will start with neoclouds and sovereign clouds, then expand to enterprises running AI in their own data centers.",
+        "Charles Liang, president, CEO and CBO of Supermicro, said the collaboration expands the DCBBS portfolio by enabling heterogeneous architectures that integrate GPU computing with specialized inference acceleration.",
+        "Rodrigo Liang, cofounder and CEO of SambaNova, said agentic AI is the next wave of inference and has to run everywhere."
+      ],
+      "sources": [
+        { "title": "SambaNova SN50 Chips to Power Supermicro's New Inference Racks", "url": "https://storagenewsletter.com/2026/11/24/sambanova-sn50-chips-to-power-supermicros-new-inference-racks", "publisher": "StorageNewsletter", "published": "2026-11-24" }
+      ]
+    },
+    {
+      "slug": "cloudera-air-gapped-sovereign-ai-mistral",
+      "channel": "technology",
+      "lead": false,
+      "angle": "Sovereignty moved from policy language to a shipped product. The air-gapped detail is the one that matters for defence and regulated buyers.",
+      "facts": [
+        "Cloudera announced a digital sovereignty package, reported 24 November 2026.",
+        "It combines Anywhere Cloud, Open Data Lakehouse and Unified Data Fabric with open-weight AI models and model customization tools from Mistral AI.",
+        "The offering supports deployment across sovereign clouds, private data centers and fully air-gapped environments with no connection to external networks.",
+        "Governance policies extend to enterprise data that AI agents retrieve and use while performing tasks.",
+        "Mistral's open-weight models can run alongside governed data, letting organizations customize models locally and run agentic workflows without exposing sensitive information.",
+        "Cloudera describes its architecture as modular and hybrid, allowing workloads to shift between infrastructure providers and private data centers without rewriting applications or migrating and duplicating underlying data.",
+        "Cloudera recently partnered with Mistral AI."
+      ],
+      "sources": [
+        { "title": "Cloudera launches digital sovereignty platform spanning AI and infrastructure", "url": "https://siliconangle.com/2026/11/24/cloudera-launches-digital-sovereignty-platform-spanning-ai-and-infrastructure", "publisher": "SiliconANGLE", "published": "2026-11-24" }
+      ]
+    },
+    {
+      "slug": "anthropic-first-week-public-compute-bill",
+      "channel": "ai",
+      "lead": false,
+      "angle": "The first public frontier lab posted a record raise and a widening compute bill in the same week. Read the margin, not the debut pop.",
+      "facts": [
+        "Anthropic priced its IPO on 18 November 2026 at $83 per share, above an initial range of $70 to $78.",
+        "It sold 980 million shares, up from the 825 million initially indicated.",
+        "The offering raised about $81 billion and valued the company at about $1.5 trillion.",
+        "Shares began trading on Nasdaq under the ticker ANT on 19 November 2026, opening at $111.50, about 34% above the IPO price.",
+        "The stock closed its first day at $97.17, about 17% above the IPO price.",
+        "It fell about 9% in early trading the following day.",
+        "Anthropic's offering produced a valuation of about $2 trillion at its debut, ahead of SpaceX's June listing.",
+        "Per its prospectus and reporting on it, compute and infrastructure expense reached 58.2% of revenue in the third quarter of 2026, against 48.1% in the preceding quarter.",
+        "That expense was $9,863 million against $16,956 million of third-quarter revenue, versus $5,558 million against $11,555 million in the second quarter.",
+        "Anthropic bought $5.0 billion of short-term compute in the third quarter, terms it says currently cost significantly more than multiyear capacity.",
+        "The operating result moved from a $974 million profit in the second quarter to a $567 million loss in the third.",
+        "The prospectus puts committed compute and lease spending at about $900.9 billion, including $451.6 billion expected before 31 December 2030.",
+        "Compute is ordered 12 to 18 months ahead under take-or-pay provisions.",
+        "Its nine-month operating loss was $1,260 million, and $19,240 million of training compute sat in research and development."
+      ],
+      "sources": [
+        { "title": "Anthropic's blockbuster debut tests Wall Street's faith in AI boom", "url": "https://live.euronext.com/en/financial-news/anthropic-tops-spacex-record-2-trillion-nasdaq-debut", "publisher": "Reuters", "published": "2026-11-19" },
+        { "title": "Anthropic prices IPO at $83 per share, giving it a $1.5 trillion valuation", "url": "https://finance.yahoo.com/technology/ai/articles/anthropic-prices-ipo-83-per-220759400.html", "publisher": "Yahoo Finance", "published": "2026-11-18" },
+        { "title": "Anthropic PBC final prospectus (424B4)", "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026074944/anthropicpbc-424b4.htm", "publisher": "US SEC", "published": "2026-11-19" },
+        { "title": "OpenAI Cuts GPT-6.2 Astra API Prices as Anthropic's Compute Share Reaches 58%", "url": "https://ctol.digital/news/openai-astra-price-cut-anthropic-compute-margin-test", "publisher": "CTOL Digital", "published": "2026-11-23" }
+      ]
+    },
+    {
+      "slug": "agentic-pentesting-frameworks-cross-threshold",
+      "channel": "ml",
+      "lead": false,
+      "angle": "Google's threat group says the shift from prompting to autonomous multi-agent tooling is the line that got crossed. Concrete, named frameworks and one named victim sector.",
+      "facts": [
+        "Google Threat Intelligence Group and Mandiant published the GTIG AI Threat Tracker update on 16 November 2026.",
+        "Written by Aurora Blum, Kelli Vanderlee, Jess Xia and David Mainor.",
+        "GTIG says adversary tradecraft has moved beyond manual prompting to deploying autonomous multi-agent offensive frameworks.",
+        "Named frameworks include ARTEX, CAIRN, CyberStrikeAI and PentAGI.",
+        "GTIG independently observed open source tools CAIRN and PentAGI deployed in the wild, and has seen experimentation with CyberStrikeAI and HexStrike AI.",
+        "CAIRN is an open source, multi-agent pentesting framework that implements an OODA (Observe, Orient, Decide, Act) loop where specialized agents collaborate via a shared blackboard to navigate from an initial parameter such as a target IP address toward an operational objective.",
+        "GTIG observed CAIRN used in intrusion activity against targets including in the aerospace sector in the US.",
+        "These frameworks share core capabilities: discovering and exploiting low-complexity vulnerabilities, using LLMs to generate single-use payloads on demand, and using real-time execution feedback to dynamically adjust tactics.",
+        "Threat actors are increasingly using LLMs and agentic frameworks to automate reverse engineering of patches via differential analysis, letting them weaponize n-day vulnerabilities and scale exploitation pipelines against internet-facing servers without human intervention.",
+        "Financially motivated actors profit from LLMJacking by stealing LLM credentials and cloud resources from compromised environments and reselling access through underground proxy services such as LLM Mixers.",
+        "State-sponsored groups and commercial Influence-as-a-Service vendors use LLMs to produce synthetic media at scale and automate cross-platform distribution.",
+        "Espionage groups use LLMs for target research and novel supply chain vectors, such as manipulating autonomous coding assistant configurations to drop backdoors during local execution.",
+        "The report says the adversarial AI landscape has reached a critical inflection point."
+      ],
+      "sources": [
+        { "title": "GTIG AI Threat Tracker: Agentic Threat Activity Crosses a Significant Threshold", "url": "https://cloud.google.com/blog/topics/threat-intelligence/agentic-threat-activity-crosses-a-significant-threshold", "publisher": "Google Threat Intelligence Group", "published": "2026-11-16" }
+      ]
+    }
+  ]
+}

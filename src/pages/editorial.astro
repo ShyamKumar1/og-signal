@@ -1,0 +1,124 @@
+---
+/**
+ * Editorial standards — a definition list, not cards.
+ * Sourcing, single-source labelling, corrections, and the lines the desk will not cross.
+ */
+import Base from '../layouts/Base.astro';
+import Kicker from '../components/Kicker.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { SITE } from '../lib/site';
+
+const rules = [
+  {
+    term: 'Primary sources',
+    body: 'Every story links the documents behind it: filings, papers, release notes, company posts. A number in the copy has a source behind it, or it is not in the copy.',
+  },
+  {
+    term: 'Single-source claims',
+    body: 'When one source supports a claim, the story says so instead of implying corroboration. Single-source items are reported as claims, not as settled fact.',
+  },
+  {
+    term: 'Numbers and dates',
+    body: 'Figures are copied from the source, converted where needed, and checked again at the verification gate. Editions file in India Standard Time, and every stamp on the site is IST.',
+  },
+  {
+    term: 'Quotes',
+    body: 'A quote appears only where the original text is public and linked. Nothing is paraphrased into quotation marks, and nothing is assembled from fragments to sound like a sentence someone said.',
+  },
+  {
+    term: 'Corrections',
+    body: 'A correction is filed as a dated entry on the corrections page, linked to the story it changes. The story gains an updated stamp and keeps its original publication stamp. Substantive changes are described rather than quietly folded in.',
+  },
+  {
+    term: 'What this desk will not do',
+    body: 'This desk does not republish text from another outlet, does not use unlicensed images, and does not invent quotes. If a story cannot be told under those rules, it does not file.',
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: `Editorial standards · ${SITE.title}`,
+  url: new URL(Astro.url.pathname, SITE.url).href,
+  description: `How ${SITE.title} sources, checks and corrects its stories.`,
+  isPartOf: { '@type': 'WebSite', name: SITE.title, url: SITE.url },
+};
+---
+
+<Base title="Editorial standards" description={`How ${SITE.title} sources, checks and corrects its stories.`} schema={schema}>
+  <section class="standards">
+    <div class="container">
+      <header class="page-head">
+        <Kicker label="Standards" text="Applied to every edition" />
+        <h1>The rules the desk files under.</h1>
+        <p class="lede">
+          These apply to every channel and every edition. They are written down so a reader can hold
+          the desk to them, including when it gets something wrong.
+        </p>
+        <div class="page-head__actions">
+          <a class="link-arrow" href="/corrections">
+            Corrections on file
+            <span aria-hidden="true">→</span>
+          </a>
+          <a class="link-arrow" href="/about">
+            How a story is made
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </header>
+
+      <SectionHead title="Sourcing and verification" label="In full" />
+
+      <dl class="standards-list">
+        {rules.map((rule) => (
+          <div class="standards-list__row">
+            <dt>{rule.term}</dt>
+            <dd>{rule.body}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .standards {
+    padding-bottom: var(--section-y);
+  }
+
+  .standards-list {
+    border-top: 1px solid var(--line);
+  }
+
+  .standards-list__row {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: var(--space-5);
+    padding-block: var(--space-5);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .standards-list dt {
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .standards-list dd {
+    max-width: 68ch;
+    color: var(--ink-soft);
+    font-size: var(--text-body);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 720px) {
+    .standards-list__row {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-2);
+    }
+  }
+</style>

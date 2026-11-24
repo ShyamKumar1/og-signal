@@ -1,0 +1,115 @@
+---
+import Base from '../layouts/Base.astro';
+import { CHANNEL_LIST, EDITIONS } from '../lib/site';
+---
+
+<Base
+  title="About this desk"
+  description="How OG Signal is produced: researched from primary sources, drafted by a model from a fixed fact pack, then checked number by number before anything is published."
+>
+  <section class="section">
+    <div class="container">
+      <header class="page-head">
+        <p class="label">About</p>
+        <h1>A desk that shows its work.</h1>
+        <p class="lede">
+          OG Signal covers artificial intelligence, language models, machine learning and the
+          technology underneath them. It files three editions a day and keeps every claim attached to
+          the source it came from.
+        </p>
+      </header>
+
+      <div class="prose">
+        <h2>Why it exists</h2>
+        <p>
+          Most AI coverage is either a press release with a headline or a thread that cannot be
+          checked. The useful middle is narrow: what was announced, what the numbers actually say,
+          what the vendor did not disclose, and what to watch next. That is the whole brief here.
+        </p>
+
+        <h2>How an edition is made</h2>
+        <p>
+          Each edition runs in four steps, in this order, and a run that fails a step publishes
+          nothing.
+        </p>
+        <dl>
+          <dt>One. Research</dt>
+          <dd>
+            Candidate stories are found across the four channels, then each one is opened at its
+            primary source: the company's own announcement, a filing, an official research post or a
+            pressroom release. A headline alone is not enough to proceed.
+          </dd>
+          <dt>Two. A fact pack</dt>
+          <dd>
+            Everything allowed into the copy is written down first, as a list of sourced statements
+            with the URL beside each one. If a number is not in the fact pack it cannot appear in the
+            article. Arithmetic is done and recorded at this stage.
+          </dd>
+          <dt>Three. Writing</dt>
+          <dd>
+            The articles are drafted by a language model from that fact pack alone. It is given no
+            other context and no ability to browse, which is what keeps it inside the facts.
+          </dd>
+          <dt>Four. Verification</dt>
+          <dd>
+            Every draft is read against the fact pack line by line, and a script checks that each
+            number in the copy exists in the pack, that every cited source matches, that the word
+            count and structure hold, and that the banned-phrase list is clean. Anything that fails
+            is rejected rather than softened.
+          </dd>
+        </dl>
+
+        <h2>What that means for you</h2>
+        <p>
+          The prose is machine-drafted and human-checked. The facts are sourced and dated. Each story
+          shows how many claims were checked and when, and a story resting on a single primary
+          announcement says so on the page instead of implying wider corroboration.
+        </p>
+        <p>
+          This is a digest. It summarises and attributes; it does not republish anyone's reporting,
+          and it does not use other people's photographs. Where a story is thin, the gap is described
+          rather than filled.
+        </p>
+
+        <h2>Cadence</h2>
+        <p>
+          Three editions a day, filed on IST: the <strong>{EDITIONS.morning.label}</strong> at
+          {' '}{EDITIONS.morning.cut}, the <strong>{EDITIONS.afternoon.label}</strong> at
+          {' '}{EDITIONS.afternoon.cut} and the <strong>{EDITIONS.night.label}</strong> at
+          {' '}{EDITIONS.night.cut}. A quiet window produces a shorter edition, not a padded one.
+        </p>
+
+        <h2>Channels</h2>
+        <p>
+          {CHANNEL_LIST.map((c) => c.label).join(', ')}. A story is filed under the channel where the
+          substance sits, not where the announcement landed.
+        </p>
+
+        <h2>Corrections</h2>
+        <p>
+          Errors are corrected on the page and logged in public. The standards used are written out in
+          the <a href="/editorial">editorial standards</a>, and the
+          {' '}<a href="/corrections">corrections log</a> is always visible.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .prose dl {
+    margin: 0 0 var(--space-5);
+  }
+  .prose dt {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-mute);
+    margin-top: var(--space-4);
+  }
+  .prose dd {
+    margin: 6px 0 0;
+    max-width: var(--measure);
+  }
+</style>

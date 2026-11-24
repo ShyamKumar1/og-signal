@@ -1,0 +1,105 @@
+---
+import Base from '../layouts/Base.astro';
+import Kicker from '../components/Kicker.astro';
+import { SITE } from '../lib/site';
+---
+
+<Base title="Page not found" description={`${SITE.title}: this page is not on the desk.`}>
+  <Fragment slot="head">
+    <meta name="robots" content="noindex" />
+  </Fragment>
+
+  <section class="not-found">
+    <div class="container not-found__inner">
+      <Kicker label="404" text="Page not found" />
+      <h1>This page is not on the desk.</h1>
+      <p class="not-found__copy">
+        The address may have changed, or the story may not have been filed. The desk is still open.
+      </p>
+      <div class="not-found__actions">
+        <a class="btn btn--primary" href="/">
+          Back to today
+        </a>
+        <a class="link-arrow" href="/editions">
+          All editions
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+      <p class="not-found__meta">
+        <a href="/channel/ai">AI</a>
+        <a href="/channel/llm">Language models</a>
+        <a href="/channel/ml">Machine learning</a>
+        <a href="/channel/technology">Technology</a>
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .not-found {
+    position: relative;
+    padding-block: clamp(72px, 12vw, 160px);
+    overflow: clip;
+  }
+
+  .not-found::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(50% 70% at 24% 20%, var(--wash) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .not-found__inner {
+    position: relative;
+    display: grid;
+    justify-items: start;
+    gap: var(--space-5);
+    max-width: 760px;
+    margin-inline: auto;
+  }
+
+  .not-found h1 {
+    max-width: 16ch;
+  }
+
+  .not-found__copy {
+    max-width: 46ch;
+    font-size: var(--text-lead);
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  .not-found__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-5);
+  }
+
+  .not-found__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+    max-width: none;
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .not-found__meta a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink-mute);
+    transition: color var(--duration) var(--ease);
+  }
+
+  .not-found__meta a:hover {
+    color: var(--accent);
+  }
+</style>

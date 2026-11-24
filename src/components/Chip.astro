@@ -1,0 +1,13 @@
+---
+/**
+ * Chip — micro label for channel, status or source count.
+ * Props: label, tone? ("line" | "cream" | "sage" | "ink", default "line").
+ */
+interface Props {
+  label: string;
+  tone?: 'line' | 'cream' | 'sage' | 'ink';
+}
+const { label, tone = 'line' } = Astro.props;
+---
+
+<span class={`chip chip--${tone}`}>{label}</span>
