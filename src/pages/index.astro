@@ -149,8 +149,8 @@ const schema = {
       <div class="container">
         <div class="lead-block">
           <div class="lead-block__main">
-            <h2 id="lead-heading"><a href={`/story/${lead.id}`}>{lead.data.title}</a></h2>
-            <p class="lead-dek">{lead.data.dek}</p>
+            <p class="label">The lead story</p>
+            <h2 id="lead-heading" class="visually-hidden">{lead.data.title}</h2>
             <p class="lead-meta">
               <span>{CHANNELS[lead.data.channel].label}</span>
               <span>{EDITIONS[lead.data.edition].label}</span>

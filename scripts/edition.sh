@@ -25,8 +25,16 @@ cp "$FACT" "$WORK/factpack.json"
 echo "→ writing with opencode (deepseek-v4.1-flash)"
 ( cd "$WORK" && ~/.opencode/bin/opencode run --auto --archived \
     -m opencode-go/deepseek-v4.1-flash \
-    "Read BRIEF-ARTICLES.md and factpack.json in this folder completely. Then write the six articles exactly as the brief specifies, one markdown file per story in ./stories/ named <slug>.md, with frontmatter matching the brief's shape exactly and sourced only from factpack.json. Do not write any other files. Do not invent facts." \
-    > opencode.log 2>&1 ) || { echo "opencode failed — see $WORK/opencode.log"; exit 1; }
+    "Read BRIEF-ARTICLES.md and factpack.json in this folder completely. Then write one markdown file per story in the factpack, exactly as the brief specifies, in ./stories/ named <slug>.md, with frontmatter matching the brief's shape and sourced only from factpack.json. Do not write any other files. Do not invent facts." \
+    > opencode.log 2>&1 ) || echo "⚠ opencode exited non-zero — judging by artifacts, not by exit code"
+
+# Do not trust opencode's exit code. Long runs can die at the provider stream
+# ("OpenAI Chat stream ended without finish_reason") AFTER writing every file —
+# observed twice. The articles on disk are what matter, so check those.
+if ! ls "$WORK"/stories/*.md >/dev/null 2>&1; then
+  echo "✗ opencode wrote no stories — see $WORK/opencode.log"
+  exit 1
+fi
 
 echo "→ verifying"
 if ! node "$REPO/scripts/verify.mjs" "$WORK/stories" "$WORK/factpack.json"; then
