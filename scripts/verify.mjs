@@ -173,7 +173,7 @@ const report = {
   warnings,
   verdict: errors.length === 0 ? 'PASS' : 'FAIL',
 };
-writeFileSync(join(dir, '..', 'verify-report.json'), JSON.stringify(report, null, 2));
+writeFileSync(join(dir, 'verify-report.json'), JSON.stringify(report, null, 2));
 
 console.log(`\nverify: ${perFile.length} file(s) — ${report.verdict}`);
 for (const f of perFile) {

@@ -57,8 +57,9 @@ Copy `sources` exactly from the factpack for that story, in the same order. Do n
 
 ## Output
 
-Write one file per story at `stories/<slug>.md` using the exact slug from the factpack.
-Six files. Nothing else. No index file, no README.
+Write one file per story in `factpack.json`, at `stories/<slug>.md` using the exact slug from the
+factpack. No more files than there are stories, and none for stories that are not in the factpack.
+No index file, no README.
 
 ## Titles that would fail
 

@@ -14,7 +14,10 @@ DEPLOY=1
 [[ "${3:-}" == "--no-deploy" ]] && DEPLOY=0
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
-WORK="$REPO/scripts/work/$(date +%Y%m%dT%H%M%S)"
+# The work dir must live OUTSIDE the repo. If it is inside, opencode can see the
+# existing corpus in src/content/stories and will rewrite stories that are not in
+# this fact pack.
+WORK="$(mktemp -d "${TMPDIR:-/tmp}/og-edition-XXXXXXXX")"
 mkdir -p "$WORK/stories"
 cp "$REPO/scripts/BRIEF-ARTICLES.md" "$WORK/BRIEF-ARTICLES.md"
 cp "$FACT" "$WORK/factpack.json"
@@ -27,7 +30,7 @@ echo "→ writing with opencode (deepseek-v4.1-flash)"
 
 echo "→ verifying"
 if ! node "$REPO/scripts/verify.mjs" "$WORK/stories" "$WORK/factpack.json"; then
-  echo "✗ verification failed — nothing published. Work dir: $WORK"
+  echo "✗ verification failed — nothing published. Work dir: $WORK (report: $WORK/stories/verify-report.json)"
   exit 1
 fi
 
