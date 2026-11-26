@@ -87,12 +87,12 @@ const schema = {
     <div class="container hero__grid">
       <div class="hero__copy">
         <p class="dateline">
-          <span>{isToday ? 'Today' : 'Last filed'}, {fmtDate(briefDay)}</span>
+          <span>{isToday ? 'Today' : 'Last updated'}, {fmtDate(briefDay)}</span>
           <span>{brief.length} {brief.length === 1 ? 'story' : 'stories'}{isToday ? ' so far' : ''}</span>
         </p>
 
         <h1 class={lead ? 'hero__title hero__title--story' : 'hero__title'}>
-          {lead ? lead.data.title : 'The AI wire that cites its sources.'}
+          {lead ? lead.data.title : 'News on AI, checked against its sources.'}
         </h1>
 
         <p class="lede">{lead ? lead.data.dek : SITE.tagline}</p>
@@ -109,11 +109,11 @@ const schema = {
         <div class="hero__actions">
           {lead ? (
             <a class="btn btn--primary" href={`/story/${lead.id}`}>
-              Read the lead story
+              Read the top story
             </a>
           ) : (
             <a class="btn btn--primary" href="/latest">
-              Open the archive
+              See all stories
             </a>
           )}
           {earlier.length > 0 && (
@@ -127,14 +127,14 @@ const schema = {
 
       <aside class="wire" aria-labelledby="wire-heading">
         <div class="wire__head">
-          <h2 id="wire-heading" class="wire__title">The wire</h2>
+          <h2 id="wire-heading" class="wire__title">Latest updates</h2>
           <span class="wire__stamp">
-            {lastUpdated ? `Updated ${fmtTime(lastUpdated)} IST` : 'Desk open'}
+            {lastUpdated ? `Updated ${fmtTime(lastUpdated)} IST` : 'Live'}
           </span>
         </div>
 
         {wire.length === 0 ? (
-          <p class="wire__empty">Nothing filed yet. The first check runs at 06:00 IST.</p>
+          <p class="wire__empty">No stories yet today. The next update is at 06:00 IST.</p>
         ) : (
           <ol class="wire__list">
             {wire.map((entry) => (
@@ -152,7 +152,7 @@ const schema = {
         )}
 
         <p class="wire__foot">
-          {isToday ? 'Filed today' : `Filed ${fmtDate(briefDay)}`} · {sourceCount} sources linked · {UPDATE_COPY}
+          {isToday ? 'Published today' : `Published ${fmtDate(briefDay)}`} · {sourceCount} sources · {UPDATE_COPY}
         </p>
       </aside>
     </div>
@@ -161,12 +161,12 @@ const schema = {
   <section class="section section--tight" id="brief" aria-labelledby="brief-heading">
     <div class="container">
       <SectionHead
-        title={isToday ? "Today's brief" : `The brief · ${fmtDate(briefDay)}`}
+        title={isToday ? "Today's stories" : `Stories from ${fmtDate(briefDay)}`}
         id="brief-heading"
-        action={{ href: '/latest', label: 'Everything filed' }}
+        action={{ href: '/latest', label: 'All stories' }}
       />
 
-      <div class="filters" role="group" aria-label="Filter the brief by topic" data-filters>
+      <div class="filters" role="group" aria-label="Filter today's stories by topic" data-filters>
         <button type="button" class="filter is-on" data-filter="all" aria-pressed="true">All topics</button>
         {CHANNEL_LIST.map((channel) => (
           <button type="button" class="filter" data-filter={channel.slug} aria-pressed="false">
@@ -179,7 +179,7 @@ const schema = {
       </div>
 
       {brief.length === 0 ? (
-        <p class="empty-note">No stories on file yet. The first check runs at 06:00 IST.</p>
+        <p class="empty-note">No stories yet. The first update runs at 06:00 IST.</p>
       ) : (
         <ol class="brief" data-brief>
           {brief.map((entry, index) => (
@@ -203,13 +203,13 @@ const schema = {
         </ol>
       )}
 
-      <p class="brief__empty-filter" data-empty-filter hidden>Nothing filed under that topic in this brief.</p>
+      <p class="brief__empty-filter" data-empty-filter hidden>No stories in this topic today.</p>
     </div>
   </section>
 
   <section class="section topics" id="topics" aria-labelledby="topics-heading">
     <div class="container">
-      <SectionHead title="By topic" id="topics-heading" label="The latest in each" />
+      <SectionHead title="Browse by topic" id="topics-heading" label="Latest in each topic" />
 
       <div class="topic-grid">
         {topics.map((topic, index) => (
@@ -226,7 +226,7 @@ const schema = {
             </header>
 
             {topic.latest.length === 0 ? (
-              <p class="topic__empty">Nothing filed here yet.</p>
+              <p class="topic__empty">No stories here yet.</p>
             ) : (
               <ol class="topic__list">
                 {topic.latest.map((entry) => (
@@ -255,7 +255,7 @@ const schema = {
   {earlier.length > 0 && (
     <section class="section section--tight earlier" id="earlier" aria-labelledby="earlier-heading">
       <div class="container">
-        <SectionHead title="Earlier" id="earlier-heading" label="Before this brief" />
+        <SectionHead title="Earlier stories" id="earlier-heading" label="Before today" />
 
         <ol class="earlier__list">
           {earlier.map((entry) => (
@@ -275,15 +275,15 @@ const schema = {
   <section class="section archive-band" aria-labelledby="archive-heading">
     <div class="container archive-band__inner">
       <div>
-        <h2 id="archive-heading">{totals.stories} stories on file.</h2>
+        <h2 id="archive-heading">{totals.stories} stories so far.</h2>
         <p class="archive-band__copy">
-          {totals.sources} sources linked across {totals.topics} topics, the first filed
-          {' '}{firstFiled ? fmtDate(firstFiled) : 'today'}. Every story stays in the archive with its
-          sources attached.
+          {totals.sources} sources across {totals.topics} topics, the earliest published
+          {' '}{firstFiled ? fmtDate(firstFiled) : 'today'}. Every story stays online with its sources
+          attached.
         </p>
       </div>
       <div class="archive-band__actions">
-        <a class="btn btn--primary" href="/latest">Open the archive</a>
+        <a class="btn btn--primary" href="/latest">See all stories</a>
         <a class="link-arrow" href="/rss.xml">
           RSS
           <span aria-hidden="true">→</span>

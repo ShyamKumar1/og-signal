@@ -12,14 +12,14 @@ import { CHANNEL_LIST, SITE } from '../lib/site';
 const storyCount = (await getCollection('stories')).filter((entry) => !entry.data.draft).length;
 ---
 
-<Base title="Search" description={`Search every story filed by ${SITE.title}.`}>
+<Base title="Search" description={`Search every story published on ${SITE.title}.`}>
   <section class="search">
     <div class="container">
       <header class="page-head">
         <Kicker label="Search" text={`${storyCount} ${storyCount === 1 ? 'story' : 'stories'} indexed`} />
         <h1>Find a story.</h1>
         <p class="lede">
-          Search the full text of every filed story, including the sources each one cites. Results
+          Search the full text of every story, including the sources each one cites. Results
           are ordered by relevance.
         </p>
       </header>

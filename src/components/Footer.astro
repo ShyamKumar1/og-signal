@@ -13,7 +13,7 @@ const columns = [
     links: CHANNEL_LIST.map((channel) => ({ href: `/channel/${channel.slug}`, label: channel.label })),
   },
   {
-    title: 'The wire',
+    title: 'Browse',
     links: [
       { href: '/', label: 'Today' },
       { href: '/latest', label: 'Latest' },
@@ -21,7 +21,7 @@ const columns = [
     ],
   },
   {
-    title: 'Desk',
+    title: 'About',
     links: [
       { href: '/about', label: 'About' },
       { href: '/editorial', label: 'Editorial standards' },
@@ -42,7 +42,7 @@ const columns = [
 <footer class="site-footer" data-pagefind-ignore>
   <div class="container">
     <div class="footer-cta">
-      <h2>One wire. Every claim sourced.</h2>
+      <h2>Every story links its sources.</h2>
       <a class="btn btn--invert" href="/rss.xml">
         Subscribe via RSS
       </a>

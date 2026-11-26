@@ -65,10 +65,10 @@ const schema = {
         </div>
       </header>
 
-      <SectionHead title={`Filed in ${channel.short}`} label="Newest first" />
+      <SectionHead title={`Latest in ${channel.short}`} label="Newest first" />
 
       {stories.length === 0 ? (
-        <p class="empty-note">No stories filed in this channel yet.</p>
+        <p class="empty-note">No stories in this topic yet.</p>
       ) : (
         <ol class="rows">
           {stories.map((story, index) => (

@@ -38,7 +38,7 @@ const entries = raw
       </header>
 
       {entries.length === 0 ? (
-        <p class="empty-note">No corrections filed.</p>
+        <p class="empty-note">No corrections yet.</p>
       ) : (
         <ul class="corrections-list">
           {entries.map((entry) => (
@@ -54,8 +54,8 @@ const entries = raw
         <h2>Reporting an error</h2>
         <p>
           If a figure, name or date is wrong, the fastest route is an issue on the repository behind
-          this site. Each one is checked against the fact pack the story was written from and, where
-          the copy is wrong, corrected with the change noted here.
+          this site. Each one is checked against the list of facts the story was written from and,
+          where the copy is wrong, corrected with the change noted here.
         </p>
       </div>
     </div>

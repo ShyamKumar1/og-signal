@@ -1,8 +1,8 @@
 export const SITE = {
   title: 'OG Signal',
-  tagline: 'A daily wire on the models, the money and the machines.',
+  tagline: 'Daily news on AI, language models and the technology behind them.',
   description:
-    'A running wire on AI, large language models, machine learning and the technology underneath them. Every claim traced to a primary source before it publishes.',
+    'Daily news on AI, large language models, machine learning and the technology underneath them. Every story links to the original source behind it.',
   url: 'https://og-signal.netlify.app',
   owner: 'OG News',
   locale: 'en_IN',
@@ -49,6 +49,6 @@ export const CHANNEL_LIST = Object.values(CHANNELS);
  */
 export const UPDATE_TIMES = ['06:00', '14:00', '22:00'] as const;
 
-export const UPDATE_COPY = `Checked at ${UPDATE_TIMES.slice(0, -1).join(', ')} and ${
+export const UPDATE_COPY = `Updates at ${UPDATE_TIMES.slice(0, -1).join(', ')} and ${
   UPDATE_TIMES[UPDATE_TIMES.length - 1]
 } IST.`;

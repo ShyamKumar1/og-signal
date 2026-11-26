@@ -40,20 +40,20 @@ const schema = {
 
 <Base
   title="Latest"
-  description={`Every story on ${SITE.title}, newest first, grouped by the day it was filed.`}
+  description={`Every story on ${SITE.title}, newest first, grouped by the day it was published.`}
   schema={schema}
 >
   <section class="archive">
     <div class="container">
       <header class="page-head">
         <Kicker
-          label="Archive"
-          text={`${stories.length} ${stories.length === 1 ? 'story' : 'stories'} on file`}
+          label="All stories"
+          text={`${stories.length} ${stories.length === 1 ? 'story' : 'stories'}`}
         />
-        <h1>Everything, newest first.</h1>
+        <h1>All stories, newest first.</h1>
         <p class="lede">
-          The whole wire in reverse order, grouped by the day it was filed. Each story keeps its
-          sources and its verification stamp.
+          Every story on the site in reverse order, grouped by the day it was published. Each one
+          links the sources behind it.
         </p>
         <p class="page-head__meta">
           <span>{days.length} {days.length === 1 ? 'day' : 'days'}</span>
@@ -63,13 +63,13 @@ const schema = {
       </header>
 
       <SectionHead
-        title="Filing history"
+        title="All stories"
         label="Newest first"
         action={stories.length > 0 ? { href: '/rss.xml', label: 'Subscribe' } : undefined}
       />
 
       {days.length === 0 ? (
-        <p class="empty-note">Nothing filed yet.</p>
+        <p class="empty-note">No stories yet.</p>
       ) : (
         <div class="days">
           {days.map((day) => (

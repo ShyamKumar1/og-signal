@@ -10,16 +10,16 @@ import { SITE } from '../lib/site';
 
 const rules = [
   {
-    term: 'Primary sources',
+    term: 'Where the facts come from',
     body: 'Every story links the documents behind it: filings, papers, release notes, company posts. A number in the copy has a source behind it, or it is not in the copy.',
   },
   {
-    term: 'Single-source claims',
-    body: 'When one source supports a claim, the story says so instead of implying corroboration. Single-source items are reported as claims, not as settled fact.',
+    term: 'One source only',
+    body: 'When only one source backs a fact, the story says so instead of implying that more than one does. Those items are reported as claims, not as settled fact.',
   },
   {
     term: 'Numbers and dates',
-    body: 'Figures are copied from the source, converted where needed, and checked again at the verification gate. The desk works in India Standard Time, and every stamp on the site is IST.',
+    body: 'Figures are copied from the source, converted where needed, and checked again before publishing. All times on the site are India Standard Time.',
   },
   {
     term: 'Quotes',
@@ -27,11 +27,11 @@ const rules = [
   },
   {
     term: 'Corrections',
-    body: 'A correction is filed as a dated entry on the corrections page, linked to the story it changes. The story gains an updated stamp and keeps its original publication stamp. Substantive changes are described rather than quietly folded in.',
+    body: 'A correction is added as a dated entry on the corrections page, linked to the story it changes. The story shows an updated date and keeps its original publication date. Substantive changes are described rather than quietly folded in.',
   },
   {
-    term: 'What this desk will not do',
-    body: 'This desk does not republish text from another outlet, does not use unlicensed images, and does not invent quotes. If a story cannot be told under those rules, it does not file.',
+    term: 'What this site will not do',
+    body: 'This site does not republish text from another outlet, does not use unlicensed images, and does not invent quotes. If a story cannot be told under those rules, it is not published.',
   },
 ];
 
@@ -50,14 +50,14 @@ const schema = {
     <div class="container">
       <header class="page-head">
         <Kicker label="Standards" text="Applied to every story" />
-        <h1>The rules the desk files under.</h1>
+        <h1>The rules this site follows.</h1>
         <p class="lede">
           These apply to every channel and every story, whatever time it files. They are written down
-          so a reader can hold the desk to them, including when it gets something wrong.
+          so a reader can hold us to them, including when we get something wrong.
         </p>
         <div class="page-head__actions">
           <a class="link-arrow" href="/corrections">
-            Corrections on file
+            Corrections log
             <span aria-hidden="true">→</span>
           </a>
           <a class="link-arrow" href="/about">

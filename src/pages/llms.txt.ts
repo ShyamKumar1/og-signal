@@ -17,7 +17,7 @@ export async function GET() {
     '',
     `> ${SITE.description}`,
     '',
-    `${SITE.title} is a running wire in IST (Asia/Kolkata). ${UPDATE_COPY} Each story carries the primary sources behind its claims.`,
+    `${SITE.title} is a news site in IST (Asia/Kolkata). ${UPDATE_COPY} Each story links the original sources behind its claims.`,
     '',
     '## Topics',
     '',

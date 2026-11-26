@@ -40,12 +40,12 @@ const verifiedLabel = story.data.verifiedAt ? `Verified ${stamp}` : `Published $
 const chipLabel = story.data.verifiedAt
   ? 'sources verified'
   : story.data.claimsChecked > 0
-    ? `${story.data.claimsChecked} claims checked`
+    ? `${story.data.claimsChecked} facts checked`
     : 'sources linked';
 
 const footnote = story.data.verifiedAt
-  ? `${story.data.claimsChecked} claims checked · verified ${fmtStamp(story.data.verifiedAt)}`
-  : `${story.data.sources.length} sources listed · verification stamp pending`;
+  ? `${story.data.claimsChecked} facts checked · verified ${fmtStamp(story.data.verifiedAt)}`
+  : `${story.data.sources.length} sources listed · not yet re-checked`;
 
 const schema = {
   '@context': 'https://schema.org',
@@ -103,7 +103,7 @@ const schema = {
             <p class="article-dek">{story.data.dek}</p>
 
             <div class="byline">
-              <span>{SITE.title} Desk</span>
+              <span>{SITE.title}</span>
               <span>{verifiedLabel}</span>
               <time class="visually-hidden" datetime={story.data.publishedAt.toISOString()} data-pagefind-meta="date">
                 {fmtDate(story.data.publishedAt)}

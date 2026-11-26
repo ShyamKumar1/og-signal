@@ -4,18 +4,18 @@ import { CHANNEL_LIST, UPDATE_COPY } from '../lib/site';
 ---
 
 <Base
-  title="About this desk"
-  description="How OG Signal is produced: researched from primary sources, drafted by a model from a fixed fact pack, then checked number by number before anything is published."
+  title="About"
+  description="How OG Signal is made: each story is researched from the original source, drafted from a fixed set of checked facts, then checked number by number before it is published."
 >
   <section class="section">
     <div class="container">
       <header class="page-head">
         <p class="label">About</p>
-        <h1>A desk that shows its work.</h1>
+        <h1>How this site is made.</h1>
         <p class="lede">
-          OG Signal covers artificial intelligence, language models, machine learning and the
-          technology underneath them. It is a running wire rather than a daily issue: stories go up
-          when they are ready, and each one stays attached to the source it came from.
+          OG Signal publishes news about artificial intelligence, language models, machine learning and
+          the technology underneath them. Stories go up through the day as they are ready, and each one
+          links the original source it came from.
         </p>
       </header>
 
@@ -24,7 +24,7 @@ import { CHANNEL_LIST, UPDATE_COPY } from '../lib/site';
         <p>
           Most AI coverage is either a press release with a headline or a thread that cannot be
           checked. The useful middle is narrow: what was announced, what the numbers actually say,
-          what the vendor did not disclose, and what to watch next. That is the whole brief here.
+          what the vendor did not disclose, and what to watch next. That is what this site is for.
         </p>
 
         <h2>How a story is made</h2>
@@ -35,27 +35,27 @@ import { CHANNEL_LIST, UPDATE_COPY } from '../lib/site';
         <dl>
           <dt>One. Research</dt>
           <dd>
-            Candidate stories are found across the four channels, then each one is opened at its
-            primary source: the company's own announcement, a filing, an official research post or a
-            pressroom release. A headline alone is not enough to proceed.
+            Candidates are found across the four topics, then each one is opened at its original
+            source: the company's own announcement, a filing, an official research post or a pressroom
+            release. A headline on its own is not enough to proceed.
           </dd>
-          <dt>Two. A fact pack</dt>
+          <dt>Two. A list of checked facts</dt>
           <dd>
-            Everything allowed into the copy is written down first, as a list of sourced statements
-            with the URL beside each one. If a number is not in the fact pack it cannot appear in the
-            article. Arithmetic is done and recorded at this stage.
+            Everything allowed into the article is written down first, as a list of statements with the
+            link beside each one. If a number is not on that list it cannot appear in the article.
+            Arithmetic is done and recorded at this stage.
           </dd>
           <dt>Three. Writing</dt>
           <dd>
-            The articles are drafted by a language model from that fact pack alone. It is given no
+            The article is drafted by a language model from that list of facts alone. It is given no
             other context and no ability to browse, which is what keeps it inside the facts.
           </dd>
           <dt>Four. Verification</dt>
           <dd>
-            Every draft is read against the fact pack line by line, and a script checks that each
-            number in the copy exists in the pack, that every cited source matches, that the word
-            count and structure hold, and that the banned-phrase list is clean. Anything that fails
-            is rejected rather than softened.
+            Every draft is read against that list line by line, and a script checks that each number in
+            the copy appears in the list, that every cited source matches, that the length and structure
+            hold, and that no hype phrases are used. Anything that fails is rejected rather than
+            softened.
           </dd>
         </dl>
 
@@ -66,27 +66,28 @@ import { CHANNEL_LIST, UPDATE_COPY } from '../lib/site';
           announcement says so on the page instead of implying wider corroboration.
         </p>
         <p>
-          This is a digest. It summarises and attributes; it does not republish anyone's reporting,
-          and it does not use other people's photographs. Where a story is thin, the gap is described
-          rather than filled.
+          This is a summary service. It reports what happened and credits where it came from; it does
+          not copy anyone's reporting, and it does not use other people's photographs. Where a story is
+          thin, the gap is described rather than filled.
         </p>
 
         <h2>When it updates</h2>
         <p>
-          The desk checks three times a day on IST. {UPDATE_COPY} A quiet window produces nothing:
-          stories are filed when there is something worth filing, not to fill a slot. Nothing on this
-          site is grouped by the hour it was checked, because that grouping is a schedule, not a
-          reader's interest.
+          The site is checked three times a day on IST. {UPDATE_COPY} A quiet window produces nothing:
+          stories are published when there is something worth publishing, not to fill a quota. Nothing
+          here is grouped by the hour it was checked, because that is a publishing schedule, not
+          something a reader needs.
         </p>
 
-        <h2>Topics, not editions</h2>
+        <h2>How the site is organised</h2>
         <p>
-          The site is organised the way a reader actually browses: one brief of what is new, then
-          four topics that hold the full history of each subject. A story is filed under the topic
-          where the substance sits, not where the announcement landed.
+          The front page opens with the newest story and a list of what has been added today, then a
+          section per topic holding that topic's latest stories. The <a href="/latest">all stories</a>
+          page keeps everything, newest first. A story is listed under the topic where the substance
+          sits, not where the announcement landed.
         </p>
 
-        <h2>Topics</h2>
+        <h2>The four topics</h2>
         <p>
           {CHANNEL_LIST.map((c) => c.label).join(', ')}.
         </p>
