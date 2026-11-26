@@ -1,7 +1,7 @@
 # Article writing brief
 
-You are writing the copy for six news articles. The facts are already gathered for you in
-`factpack.json` in this folder. Your job is the writing, not the research.
+You are writing the copy for one news article per story in `factpack.json`. The facts are already
+gathered for you. Your job is the writing, not the research.
 
 ## Hard rules
 
@@ -63,8 +63,10 @@ rather than a product announcement. When the factpack gives you paper details, a
 
 Omit `paper` entirely if the factpack has no paper details. Never invent a venue, an arXiv id or an
 author list.
-`lead: true` only on the story whose slug is `open-weight-models-554b-and-5-9gb-same-day`.
-Copy `sources` exactly from the factpack for that story, in the same order. Do not invent sources.
+`lead: true` only on the story whose entry in `factpack.json` has `"lead": true`. If no story has
+it, set `lead: false` on all of them. Copy `sources` exactly from the factpack for every story, in
+the same order. Do not invent sources. Copy `publishedAt` from the factpack note, the same instant
+on every story.
 `claimsChecked` stays 0 — a verifier fills it in later.
 
 ## Output

@@ -1,0 +1,214 @@
+{
+  "edition": "afternoon",
+  "date": "2026-11-26",
+  "timezone": "Asia/Kolkata",
+  "note": "Filed at 14:00 IST on 26 November 2026. Set publishedAt to 2026-11-26T14:00:00+05:30 on every story. Set lead: true on the Chariot-1 story only, and lead: false on every other story. All benchmark and performance figures are vendor or author figures and must be attributed at least once per story. Five stories: one launch from India, one voice-translation model, one memory-fit demonstration, and two research papers.",
+  "derived": [
+    "Chariot-1's language model activates four billion of its eleven billion parameters per token: 4 / 11 = about 36.4 per cent.",
+    "Kioxia reports 144 SSDs at 7.68 TB each, which is 144 x 7.68 = 1105.92 TB, or about 1.1 PB of raw capacity.",
+    "Kioxia reports nearly 60 TB of extended memory per node across 18 nodes: 60 x 18 = 1080 TB, or about 1.08 PB.",
+    "LoomKV stores BF16 KV at 0.71 of raw size, which is a reduction of 1 - 0.71 = 0.29, or about 29 per cent.",
+    "AliceAI-Foundation activates approximately three billion of its 80 billion parameters per token: 3 / 80 = about 3.75 per cent.",
+    "AliceAI scores 86.5 - 83.2 = 3.3 points above DeepSeek-V4-Flash-Base on WikiWebFacts and 67.9 - 65.4 = 2.5 points on HardMultiQA."
+  ],
+  "stories": [
+    {
+      "slug": "chariot-1-india-sovereign-foundation-model",
+      "channel": "llm",
+      "lead": true,
+      "research": false,
+      "angle": "India's government-backed model programme produced a single backbone for text, speech generation and speech recognition rather than three separate systems. The story is about what was actually shipped, what the numbers cover, and how small the models are for the claim being made.",
+      "facts": [
+        "MeitY Secretary S. Krishnan inaugurated the Chariot-1 Foundation Models on 25 November 2026 at Chariot One, a launch and research showcase at Bharat Mandapam in New Delhi.",
+        "The models were developed by Chariot Artificial Intelligence Pvt. Ltd., one of the first four teams selected under the IndiaAI Mission to build sovereign foundation models.",
+        "The Chariot-1 suite comprises a Chariot-1 Large Language Model and a Chariot-1 Text-to-Speech model, both pre-trained from scratch in India, according to the MeitY statement.",
+        "The Chariot-1 language model is an 11-billion-parameter mixture-of-experts model with four billion active parameters per token, according to the ministry statement.",
+        "The language model is available in three variants of 10.7 billion, 1.7 billion and 745 million parameters, for different computational and deployment requirements.",
+        "The text-to-speech model generates speech in English and ten Indian languages: Hindi, Bengali, Marathi, Tamil, Telugu, Kannada, Malayalam, Gujarati, Punjabi and Odia.",
+        "The ministry says the speech model recorded over 97 per cent verbalisation accuracy on the Async TTS Pronunciation Benchmark, which comprises 1,029 real-world sentences and 2,251 instances of non-standard text across 42 categories.",
+        "The ministry says the speech model recorded a character error rate of 7.60 per cent in Hindi and an average character error rate of 6.47 per cent across nine other Indian languages, the lowest among the systems evaluated in the reported tests.",
+        "Chariot-1 incorporates IndicShift, a shared alphabet for Indian scripts, which the IndiaAI Mission says processes Indian text using 2.5 times fewer tokens.",
+        "Chariot-1 uses Nested Training, which produces three model sizes from a single training run and which the company says makes training 62 per cent faster.",
+        "Chariot says its Mixture of Vocabularies approach delivers 38 per cent faster training.",
+        "Co-founder Parth Sarthi said the model combines text generation, text-to-speech and automatic speech recognition in a single architecture, reducing the need for separate specialised models.",
+        "Parth Sarthi said: \"it is one model, a backbone that powers all these different applications\".",
+        "The lab's earlier releases, Chariot-1-ASR Realtime for speech recognition and Chariot-1-TTS-Multilingual for speech generation, were trained further from this foundation model.",
+        "Chariot-1-TTS-Multilingual was published by the lab on 12 November 2026 and covers 11 Indic languages and English, with more than 50 voices, code-mixing, voice cloning and context-aware pronunciation.",
+        "Chariot-1-ASR Realtime was published by the lab on 22 October 2026 and covers real-time speech recognition for 10 Indian languages.",
+        "Chariot is headquartered in Delhi and was co-founded by Parth Sarthi and Suvrat Bhooshan.",
+        "Chariot One ran at Bharat Mandapam on 25 November 2026 from 1:00 to 4:30 PM, with the model launch and research showcase from 2:00 to 3:00 PM, followed by a fireside conversation between Suvrat Bhooshan and NVIDIA South Asia managing director Vishal Dhupar.",
+        "Krishnan said the government's upcoming artificial intelligence regulation papers are in their final stages and will be released shortly."
+      ],
+      "sources": [
+        {
+          "title": "Chariot One launch and research showcase",
+          "url": "https://chariot.in/chariot-one/",
+          "publisher": "Chariot",
+          "published": "2026-11-25"
+        },
+        {
+          "title": "India launches indigenous Chariot-1 Foundation Models to strengthen sovereign AI capabilities",
+          "url": "https://aninews.in/news/business/india-launches-indigenous-chariot-1-foundation-models-to-strengthen-sovereign-ai-capabilities20261126133539",
+          "publisher": "ANI, reproducing the MeitY statement",
+          "published": "2026-11-26"
+        },
+        {
+          "title": "IndiaAI-backed Chariot-1 combines text, speech and recognition in one model",
+          "url": "https://thehindubusinessline.com/info-tech/indiaai-backed-chariot-1-combines-text-speech-and-recognition-in-one-model/article71743519.ece/amp",
+          "publisher": "The Hindu BusinessLine",
+          "published": "2026-11-25"
+        },
+        {
+          "title": "MeitY Secretary at the launch and Research Showcase of Chariot One",
+          "url": "https://pib.gov.in/ShowAlbum.aspx?albumid=234728&lang=1&reg=3",
+          "publisher": "Press Information Bureau",
+          "published": "2026-11-25"
+        }
+      ]
+    },
+    {
+      "slug": "deepl-aure-v2-speech-to-speech",
+      "channel": "ai",
+      "lead": false,
+      "research": false,
+      "angle": "DeepL collapsed a three-stage speech translation pipeline into one model and trained it with reinforcement learning to decide when it has heard enough to start talking. The delay claim is vendor-measured on one-minute recordings, which is the right place to be sceptical.",
+      "facts": [
+        "DeepL launched Aure v2, a voice translation model, at its inaugural Unmute Summit in Tokyo on 26 November 2026.",
+        "Aure v2 is available now to DeepL Voice customers.",
+        "DeepL says Aure v2 cuts translation delay by 50 per cent against Aure, the model it released earlier in November 2026, which adapted to a speaker's voice, tone and intonation during a conversation.",
+        "DeepL says Aure v2 achieved a 50 per cent lower median translation delay than Aure in its internal benchmarks.",
+        "DeepL says Aure v2 reached higher translation quality than six competing systems tested, in every language pair.",
+        "DeepL says Aure v2 produced 32 per cent fewer English-Japanese translation errors than Google Gemini 3.5 Live Translate.",
+        "Aure v2 uses a new end-to-end architecture that translates directly from speech to speech, removing the separate transcription, translation and speech-generation stages.",
+        "DeepL trained the model with reinforcement learning because high-quality recordings of real-time speech translation with the right timing and expression are scarce.",
+        "During training, Aure v2 was rewarded for translations that were both accurate and quick to start, so it learned when it had heard enough context to begin translating.",
+        "DeepL says the timing decision matters most for languages such as German and Japanese, where essential information can arrive at the end of a sentence.",
+        "Aure v2 supports six languages at launch: English, German, French, Spanish, Japanese and Korean.",
+        "The model is available across DeepL Voice for Online Meetings, DeepL Voice for In-Person Conversations and the DeepL API for Voice, and is enabled automatically for supported languages without additional setup.",
+        "DeepL says DeepL Voice usage rose more than 8x year over year in Q3 2026 measured in total voice minutes, and that translated meeting minutes rose by approximately 7x.",
+        "DeepL says Q3 2026 meeting usage on DeepL Voice grew more than 7x in Japan and 5x in South Korea, and more than 6x in both the United States and Germany, measured by minutes spent in meetings.",
+        "As of October 2026, DeepL says the number of active DeepL Voice subscriptions with meeting usage grew approximately 12x year over year in Japan and South Korea combined, 8x in the United States and 9x in Germany.",
+        "The internal benchmark was a DeepL study in November 2026 on one-minute real-speech recordings across 10 language pairs with human-validated transcripts, with all models tested over public APIs and no application overhead.",
+        "DeepL says results may differ in real conversations.",
+        "DeepL says that for enterprise customers, audio, transcriptions and translations are not used to train its models, and meeting data is deleted when calls end, subject to customer-controlled retention settings.",
+        "DeepL says it holds ISO 27001 and SOC 2 Type II certifications and supports GDPR compliance.",
+        "DeepL chief executive Jarek Kutylowski said: \"what's even more exciting is what this makes possible for our customers\".",
+        "DeepL chief technology officer Sebastian Enderlein said: \"The key to real-time translation isn't simply processing speech faster - it's knowing when you have enough information to translate accurately\"."
+      ],
+      "sources": [
+        {
+          "title": "DeepL introduces Aure v2, its fastest Voice AI translation model",
+          "url": "https://www.deepl.com/en/press-release/aure-v2",
+          "publisher": "DeepL",
+          "published": "2026-11-26"
+        }
+      ]
+    },
+    {
+      "slug": "kioxia-nvidia-scada-petabyte-memory",
+      "channel": "technology",
+      "lead": false,
+      "research": false,
+      "angle": "The memory wall is being answered by pushing the KV cache and vector indexes out of HBM and into flash. The numbers here are capacity, not speed, and the release is careful to call the whole thing a demonstration.",
+      "facts": [
+        "Kioxia announced on 26 November 2026 a collaboration with NVIDIA demonstrating the potential to extend effective GPU memory capacity to petabyte scale using NVIDIA SCADA software and Kioxia SSDs, in support of NVIDIA's Storage-Next initiative.",
+        "The demonstration processed a database of 2 trillion vectors on an NVIDIA GB200 NVL72 rack-scale system equipped with 144 Kioxia XD8 Series 7.68 TB E1.S NVMe SSDs.",
+        "The proof of concept used 18 server nodes and about 1.1 PB of raw SSD capacity.",
+        "Each node supported eight SSDs, and the configuration supports nearly 60 TB of flash-based extended memory capacity per node.",
+        "The system supports 512-byte accesses, with the potential to support 2 trillion 512-byte vectors across the architecture.",
+        "NVIDIA SCADA stands for Scaled Accelerated Data Access and is a software library designed to extend effective GPU memory capacity using NVMe SSDs, including fine-grained data access with small block sizes.",
+        "Kioxia says rapid growth in AI datasets is placing increasing pressure on high-bandwidth memory capacity, and that processing those datasets with HBM alone can require dividing workloads into smaller segments and repeatedly moving data between memory and slower storage.",
+        "Kioxia says the approach can support large-scale vector databases and the processing of large datasets used in graph neural networks.",
+        "Kioxia continues development of the XD8 Series and its GP Series Super High IOPS SSDs.",
+        "Kioxia says the proof-of-concept testing was performed by Kioxia and NVIDIA as of 26 November 2026.",
+        "Kioxia and NVIDIA say they remain engaged in evaluating the technical feasibility and performance of NVIDIA SCADA and the Storage-Next architecture."
+      ],
+      "sources": [
+        {
+          "title": "Kioxia and NVIDIA Collaborate to Expand Effective High-Bandwidth Memory Capacity with SSDs",
+          "url": "https://www.kioxia.com/en-jp/business/news/2026/20261126-1.html",
+          "publisher": "Kioxia",
+          "published": "2026-11-26"
+        }
+      ]
+    },
+    {
+      "slug": "yandex-aliceai-80b-a3b-open-weights",
+      "channel": "ml",
+      "lead": false,
+      "research": true,
+      "paper": {
+        "title": "AliceAI-Foundation-80B-A3B-Base",
+        "venue": "arXiv preprint, cs.CL",
+        "id": "arXiv:2611.34529",
+        "url": "https://arxiv.org/abs/2611.34529"
+      },
+      "angle": "A full training report for an 80-billion-parameter open model, including the parts that went wrong: the authors say held-out training loss is a poor proxy for downstream results and change the loss to fix it. The Russian-language benchmarks are new and authored by the same team, so read the comparison as a first data point.",
+      "facts": [
+        "The paper presents AliceAI-Foundation-80B-A3B-Base, a mixture-of-experts language model with 80 billion total parameters and approximately 3 billion active parameters per token.",
+        "The model was trained from scratch at Yandex and released under the Apache 2.0 licence.",
+        "The architecture combines Kimi Delta Attention with full attention, uses Attention Residuals, and was trained with Muon.",
+        "Training comprised general pretraining on 17.5 trillion tokens, two context-extension stages, and a dedicated stage for reasoning and agentic interaction.",
+        "The paper describes data collection and augmentation pipelines, evaluation protocols, architectural ablations and scaling-law experiments.",
+        "The authors identify limitations of held-out training loss as a proxy for downstream performance, and introduce an auxiliary loss on mixture-of-experts outputs to stabilise training at the predicted learning rate.",
+        "The authors say domain-specific data selection and augmentation improve factual knowledge, mathematics and programming skills.",
+        "The authors say agent trajectories introduced during pretraining improve performance on agentic benchmarks after supervised fine-tuning.",
+        "In zero-shot reasoning evaluation the model achieves leading results among open base models of comparable size, with 88.7 per cent pass@8 on IMO-AnswerBench and 82.9 per cent pass@8 on LiveCodeBench v5-v6.",
+        "The authors introduce and release two benchmarks with their evaluation protocols for Russian-language factual knowledge: WikiWebFacts, which tests short factual questions drawn from encyclopedic sources and search queries, and HardMultiQA, which tests more demanding factual questions inspired by user interactions.",
+        "The model scores 86.5 per cent on WikiWebFacts and 67.9 per cent on HardMultiQA.",
+        "DeepSeek-V4-Flash-Base, with 284 billion total and 13 billion active parameters, scores 83.2 per cent on WikiWebFacts and 65.4 per cent on HardMultiQA.",
+        "Nemotron-3-Super-120B-A12B-Base, with 120 billion total and 12 billion active parameters, scores 72.8 per cent on WikiWebFacts and 54.5 per cent on HardMultiQA.",
+        "The authors say the model outperforms both larger models on these benchmarks.",
+        "The paper was submitted on 25 November 2026 and runs to five megabytes of source, with 35 listed authors.",
+        "The paper is filed under Computation and Language and Machine Learning."
+      ],
+      "sources": [
+        {
+          "title": "AliceAI-Foundation-80B-A3B-Base",
+          "url": "https://arxiv.org/abs/2611.34529",
+          "publisher": "arXiv",
+          "published": "2026-11-25"
+        }
+      ]
+    },
+    {
+      "slug": "loomkv-lossless-kv-cache-compression",
+      "channel": "technology",
+      "lead": false,
+      "research": true,
+      "paper": {
+        "title": "LoomKV: Lossless KV Cache Compression from GPU Memory to SSD for LLM Serving",
+        "venue": "arXiv preprint, cs.AI",
+        "id": "arXiv:2611.32954",
+        "url": "https://arxiv.org/abs/2611.32954"
+      },
+      "angle": "Most storage work for inference accepts lossy compression and then measures quality afterwards. This one claims bit-exactness and shows where the capacity goes instead. The gains are largest exactly at the point where a cache evicts, which is what makes the result worth reading.",
+      "facts": [
+        "LoomKV brings lossless KV cache compression to both external tiers, called tier mode, and the GPU KV pool, called pool mode, on an unmodified serving engine.",
+        "The compression uses a calibrated per-head two-level 3-bit code over BF16 high bytes, covering the sign and the upper seven exponent bits.",
+        "LoomKV stores BF16 KV at 0.71 of its raw size across nine models, and FP8 KV at 0.85 to 0.87 of raw size.",
+        "In tier mode, TileStream writes exact-length records with length readback off the load path, leaving tier storage, eviction and prefetch unchanged, and decompresses fetched records straight into scattered GPU pages.",
+        "In pool mode, FragPack packs variable-length records into smaller shared-budget GPU pages read in place by a fused decode-attention kernel that the authors say is faster than FlashAttention-3 on BF16.",
+        "The system was built with LMCache and vLLM.",
+        "LoomKV makes compressed tiers act as 1.4x larger raw tiers on AgentX.",
+        "Across LMCache's LRU eviction cliff, tier mode delivers 2.7x to 3.6x the goodput of raw storage and 1.9x to 3.1x lower mean time to first token.",
+        "The authors report that the cliff shifts identically under other simulated replacement policies.",
+        "Tier mode cuts repeated-prompt time to first token by up to 1.7x through SSD-to-DRAM promotion.",
+        "When the tiers hold the working set, pool mode fits 1.31x to 1.34x as many GPU tokens, admitting 12 long requests with roughly the queue and goodput of 8 requests without compression.",
+        "On an AI IDE trace where both the tiers and the GPU pool are constrained, tier mode raises goodput by 1.24x and pool mode by 1.59x.",
+        "Where raw capacity suffices, compression costs at most 2.2 per cent throughput.",
+        "The authors report tier mode is bit-exact with raw tiers, and pool mode matches FlashAttention-3's numerical accuracy.",
+        "The paper was submitted on 24 November 2026 and runs to 16 pages with 12 figures and 5 tables.",
+        "The authors are Wentao Zhu, Ziao Sheng, Peng Deng, Huiqi Hu, Xuan Zhou, Xing Wei and Zhuang Wang."
+      ],
+      "sources": [
+        {
+          "title": "LoomKV: Lossless KV Cache Compression from GPU Memory to SSD for LLM Serving",
+          "url": "https://arxiv.org/abs/2611.32954",
+          "publisher": "arXiv",
+          "published": "2026-11-24"
+        }
+      ]
+    }
+  ]
+}
