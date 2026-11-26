@@ -2,7 +2,6 @@
 title: "Anthropic's first week public came with a $9.9 billion compute bill"
 dek: "Compute reached 58.2% of revenue in the third quarter as the newly listed lab's operating result swung from a $974 million profit to a $567 million loss."
 channel: "ai"
-edition: "morning"
 publishedAt: "2026-11-25T04:30:00+05:30"
 readingTime: 3
 tags: ["anthropic", "ipo", "compute", "margins"]

@@ -1,8 +1,8 @@
 export const SITE = {
   title: 'OG Signal',
-  tagline: 'An AI, LLM and machine-learning desk for people who ship.',
+  tagline: 'A daily wire on the models, the money and the machines.',
   description:
-    'Three editions a day on AI, large language models, machine learning and the technology underneath them. Every claim traced to a primary source.',
+    'A running wire on AI, large language models, machine learning and the technology underneath them. Every claim traced to a primary source before it publishes.',
   url: 'https://og-signal.netlify.app',
   owner: 'OG News',
   locale: 'en_IN',
@@ -43,12 +43,12 @@ export const CHANNELS: Record<
 
 export const CHANNEL_LIST = Object.values(CHANNELS);
 
-export const EDITIONS = {
-  morning: { label: 'Morning Edition', cut: '06:00', window: 'overnight to 06:00 IST' },
-  afternoon: { label: 'Afternoon Edition', cut: '14:00', window: '06:00 to 14:00 IST' },
-  night: { label: 'Night Edition', cut: '22:00', window: '14:00 to 22:00 IST' },
-} as const;
+/**
+ * The wire is checked three times a day. These are update times, not editions:
+ * a slot with nothing worth filing produces no story at all.
+ */
+export const UPDATE_TIMES = ['06:00', '14:00', '22:00'] as const;
 
-export type EditionSlug = keyof typeof EDITIONS;
-
-export const EDITION_ORDER: EditionSlug[] = ['morning', 'afternoon', 'night'];
+export const UPDATE_COPY = `Checked at ${UPDATE_TIMES.slice(0, -1).join(', ')} and ${
+  UPDATE_TIMES[UPDATE_TIMES.length - 1]
+} IST.`;

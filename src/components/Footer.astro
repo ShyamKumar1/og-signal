@@ -3,18 +3,22 @@
  * Footer — night band with the desk promise, RSS pill, and four mono link columns.
  * No props. Links point at the routes planned in Section 2.
  */
-import { CHANNEL_LIST, EDITION_ORDER, EDITIONS, SITE } from '../lib/site';
+import { CHANNEL_LIST, SITE } from '../lib/site';
 
 const year = new Date().getFullYear();
 
 const columns = [
   {
-    title: 'Channels',
+    title: 'Topics',
     links: CHANNEL_LIST.map((channel) => ({ href: `/channel/${channel.slug}`, label: channel.label })),
   },
   {
-    title: 'Editions',
-    links: EDITION_ORDER.map((slug) => ({ href: `/editions`, label: EDITIONS[slug].label })),
+    title: 'The wire',
+    links: [
+      { href: '/', label: 'Today' },
+      { href: '/latest', label: 'Latest' },
+      { href: '/search', label: 'Search' },
+    ],
   },
   {
     title: 'Desk',
@@ -22,7 +26,6 @@ const columns = [
       { href: '/about', label: 'About' },
       { href: '/editorial', label: 'Editorial standards' },
       { href: '/corrections', label: 'Corrections' },
-      { href: '/search', label: 'Search' },
     ],
   },
   {
@@ -39,7 +42,7 @@ const columns = [
 <footer class="site-footer" data-pagefind-ignore>
   <div class="container">
     <div class="footer-cta">
-      <h2>Three editions. Every claim sourced.</h2>
+      <h2>One wire. Every claim sourced.</h2>
       <a class="btn btn--invert" href="/rss.xml">
         Subscribe via RSS
       </a>

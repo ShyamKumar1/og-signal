@@ -5,4 +5,5 @@ dist/
 .DS_Store
 verify-report.json
 scripts/work/
+.env
 *.log

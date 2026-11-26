@@ -16,7 +16,6 @@ export async function GET() {
     url: new URL(`/story/${story.id}/`, SITE.url).href,
     dek: story.data.dek,
     channel: story.data.channel,
-    edition: story.data.edition,
     publishedAt: story.data.publishedAt.toISOString(),
     readingTime: story.data.readingTime,
     tags: story.data.tags,

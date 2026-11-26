@@ -2,7 +2,6 @@
 title: "Moonshot's 2.8-trillion-parameter Kimi K3.1 Pro arrives with open weights"
 dek: "The Chinese lab published a mixture-of-experts model with 104 billion parameters active per token, and a benchmark table that is strong on agents and weak on security."
 channel: "llm"
-edition: "morning"
 publishedAt: "2026-11-26T06:00:00+05:30"
 readingTime: 3
 tags: ["kimi", "moonshot", "open-weights", "mixture-of-experts"]

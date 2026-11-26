@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { CHANNEL_LIST, EDITIONS } from '../lib/site';
+import { CHANNEL_LIST, UPDATE_COPY } from '../lib/site';
 ---
 
 <Base
@@ -14,8 +14,8 @@ import { CHANNEL_LIST, EDITIONS } from '../lib/site';
         <h1>A desk that shows its work.</h1>
         <p class="lede">
           OG Signal covers artificial intelligence, language models, machine learning and the
-          technology underneath them. It files three editions a day and keeps every claim attached to
-          the source it came from.
+          technology underneath them. It is a running wire rather than a daily issue: stories go up
+          when they are ready, and each one stays attached to the source it came from.
         </p>
       </header>
 
@@ -27,9 +27,9 @@ import { CHANNEL_LIST, EDITIONS } from '../lib/site';
           what the vendor did not disclose, and what to watch next. That is the whole brief here.
         </p>
 
-        <h2>How an edition is made</h2>
+        <h2>How a story is made</h2>
         <p>
-          Each edition runs in four steps, in this order, and a run that fails a step publishes
+          Every story runs through four steps in this order, and a run that fails a step publishes
           nothing.
         </p>
         <dl>
@@ -71,18 +71,24 @@ import { CHANNEL_LIST, EDITIONS } from '../lib/site';
           rather than filled.
         </p>
 
-        <h2>Cadence</h2>
+        <h2>When it updates</h2>
         <p>
-          Three editions a day, filed on IST: the <strong>{EDITIONS.morning.label}</strong> at
-          {' '}{EDITIONS.morning.cut}, the <strong>{EDITIONS.afternoon.label}</strong> at
-          {' '}{EDITIONS.afternoon.cut} and the <strong>{EDITIONS.night.label}</strong> at
-          {' '}{EDITIONS.night.cut}. A quiet window produces a shorter edition, not a padded one.
+          The desk checks three times a day on IST. {UPDATE_COPY} A quiet window produces nothing:
+          stories are filed when there is something worth filing, not to fill a slot. Nothing on this
+          site is grouped by the hour it was checked, because that grouping is a schedule, not a
+          reader's interest.
+        </p>
+
+        <h2>Topics, not editions</h2>
+        <p>
+          The site is organised the way a reader actually browses: one brief of what is new, then
+          four topics that hold the full history of each subject. A story is filed under the topic
+          where the substance sits, not where the announcement landed.
         </p>
 
         <h2>Channels</h2>
         <p>
-          {CHANNEL_LIST.map((c) => c.label).join(', ')}. A story is filed under the channel where the
-          substance sits, not where the announcement landed.
+          {CHANNEL_LIST.map((c) => c.label).join(', ')}.
         </p>
 
         <h2>Corrections</h2>

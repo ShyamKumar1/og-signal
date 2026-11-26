@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 # edition.sh — one full newsroom run.
 #
-#   ./scripts/edition.sh <factpack.json> <edition: morning|afternoon|night> [--no-deploy]
+#   ./scripts/edition.sh <factpack.json> <morning|afternoon|night> [--no-deploy]
+#
+# The second argument is the check slot, used only for logging and the commit
+# message. It is not a section of the site: stories carry a publish time, not an
+# edition. Nothing here groups content by slot.
 #
 # Steps: opencode writes the articles -> verify.mjs gates them -> Astro builds
-#        -> commit + push -> Netlify production deploy.
+#        -> commit + push -> Netlify production deploy -> WhatsApp alert.
 # Any failure before the build leaves the repo untouched.
 set -euo pipefail
 
 FACT="${1:?usage: edition.sh <factpack.json> <morning|afternoon|night> [--no-deploy]}"
-EDITION="${2:?edition required}"
+SLOT="${2:?check slot required}"
 DEPLOY=1
 [[ "${3:-}" == "--no-deploy" ]] && DEPLOY=0
 
@@ -42,7 +46,7 @@ if ! node "$REPO/scripts/verify.mjs" "$WORK/stories" "$WORK/factpack.json"; then
   exit 1
 fi
 
-echo "→ installing $EDITION edition into content"
+echo "→ installing $SLOT stories into content"
 cp "$WORK"/stories/*.md "$REPO/src/content/stories/"
 rm -f "$REPO/src/content/stories/_smoke.md"
 
@@ -53,10 +57,14 @@ npm run build
 if [[ $DEPLOY -eq 1 ]]; then
   echo "→ committing"
   git add -A
-  git commit -m "edition: $(date +%F) $EDITION — $(ls "$WORK"/stories | wc -l | tr -d ' ') stories" || echo "nothing to commit"
+  git commit -m "wire: $(date +%F) $SLOT — $(ls "$WORK"/stories | wc -l | tr -d ' ') stories" || echo "nothing to commit"
   git push origin HEAD || echo "push skipped"
   echo "→ deploying"
-  netlify deploy --prod --dir=dist --message "edition $(date +%F) $EDITION"
+  netlify deploy --prod --dir=dist --message "wire $(date +%F) $SLOT"
+
+  echo "→ notifying on WhatsApp"
+  # A failed alert must never fail a published run, so this is allowed to warn.
+  node "$REPO/scripts/notify.mjs" --files "$WORK"/stories/*.md || echo "⚠ WhatsApp alert failed — stories are live anyway"
 fi
 
-echo "✓ edition complete: $WORK"
+echo "✓ run complete: $WORK"

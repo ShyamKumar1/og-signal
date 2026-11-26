@@ -1,13 +1,21 @@
 ---
+/**
+ * Today — the wire.
+ *
+ * Sections, in reading order:
+ *   1. Hero: the newest lead, plus a panel of everything filed in this update window.
+ *   2. The brief: today's stories in one filterable list (topic filter is remembered).
+ *   3. Topics: four sections, each carrying its own latest stories, not links to a list.
+ *   4. Earlier: what was filed before today, then the archive link.
+ *
+ * There are no editions anywhere on this page. Time is a stamp on a story, not a section.
+ */
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Kicker from '../components/Kicker.astro';
 import SectionHead from '../components/SectionHead.astro';
-import StatStrip from '../components/StatStrip.astro';
-import StoryRow from '../components/StoryRow.astro';
-import EditionConsole from '../components/EditionConsole.astro';
-import { CHANNEL_LIST, CHANNELS, EDITION_ORDER, EDITIONS, SITE, type EditionSlug } from '../lib/site';
-import { fmtStamp, fmtTime, isoDay, pad } from '../lib/format';
+import { CHANNEL_LIST, CHANNELS, SITE, UPDATE_COPY } from '../lib/site';
+import { fmtDate, fmtStamp, fmtTime, isoDay, pad, relTime } from '../lib/format';
 
 const stories = (await getCollection('stories'))
   .filter((entry) => !entry.data.draft)
@@ -15,35 +23,33 @@ const stories = (await getCollection('stories'))
 
 const todayKey = isoDay(new Date());
 const todays = stories.filter((entry) => isoDay(entry.data.publishedAt) === todayKey);
-const lead = stories.find((entry) => entry.data.lead) ?? stories[0];
-const latest = stories.filter((entry) => entry !== lead).slice(0, 8);
+const brief = todays.length > 0 ? todays : stories.slice(0, 6);
+const briefDay = brief[0] ? isoDay(brief[0].data.publishedAt) : todayKey;
+const isToday = briefDay === todayKey;
 
-const sourceCount = new Set(todays.flatMap((entry) => entry.data.sources.map((source) => source.url))).size;
-const channelsCovered = new Set(stories.map((entry) => entry.data.channel)).size;
-const editionsFiled = new Set(stories.map((entry) => `${isoDay(entry.data.publishedAt)}-${entry.data.edition}`)).size;
+const lead = todays.find((entry) => entry.data.lead) ?? todays[0] ?? stories[0];
+const wire = brief.slice(0, 7);
+const earlier = stories.filter((entry) => !brief.includes(entry)).slice(0, 5);
 
-const istHour = Number(
-  new Intl.DateTimeFormat('en-GB', { hour: '2-digit', hour12: false, timeZone: SITE.timezone }).format(new Date()),
-);
-const nextEdition: EditionSlug = istHour < 6 ? 'morning' : istHour < 14 ? 'afternoon' : istHour < 22 ? 'night' : 'morning';
-const nextEditionTomorrow = istHour >= 22;
-const nextLabel = EDITIONS[nextEdition].label;
-const nextCut = EDITIONS[nextEdition].cut;
-
-const editionRows = EDITION_ORDER.map((slug) => ({
-  short: pad(EDITION_ORDER.indexOf(slug) + 1),
-  label: EDITIONS[slug].label.replace(' Edition', ''),
-  cut: EDITIONS[slug].cut,
-  count: todays.filter((entry) => entry.data.edition === slug).length,
-  current: slug === nextEdition,
-}));
-
-const consoleHeadline = `${nextEditionTomorrow ? 'Tomorrow' : 'Today'} · ${nextLabel}`;
-const consoleStatus = todays.length > 0 ? `next edition ${nextCut} IST` : 'no copy filed';
-
+const sourceCount = new Set(brief.flatMap((entry) => entry.data.sources.map((source) => source.url))).size;
 const lastUpdated = stories[0]?.data.updatedAt ?? stories[0]?.data.publishedAt;
-const heroStamp = lastUpdated ? `Updated ${fmtStamp(lastUpdated)}` : `Desk open · ${fmtStamp(new Date())}`;
-const heroCheck = stories.length > 0 ? 'Every claim checked against primary sources' : 'No edition filed yet';
+const firstFiled = stories[stories.length - 1]?.data.publishedAt;
+
+const topics = CHANNEL_LIST.map((channel) => {
+  const inTopic = stories.filter((entry) => entry.data.channel === channel.slug);
+  return {
+    ...channel,
+    total: inTopic.length,
+    latest: inTopic.slice(0, 3),
+    fresh: inTopic.filter((entry) => isoDay(entry.data.publishedAt) === todayKey).length,
+  };
+});
+
+const totals = {
+  stories: stories.length,
+  sources: new Set(stories.flatMap((entry) => entry.data.sources.map((source) => source.url))).size,
+  topics: new Set(stories.map((entry) => entry.data.channel)).size,
+};
 
 const firstBlock = (lead?.body ?? '')
   .trim()
@@ -65,11 +71,6 @@ const leadExcerpt = (firstBlock ?? '')
   .replace(/\s+/g, ' ')
   .trim();
 
-const channelCounts = CHANNEL_LIST.map((channel) => ({
-  ...channel,
-  count: stories.filter((entry) => entry.data.channel === channel.slug).length,
-}));
-
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -85,22 +86,25 @@ const schema = {
   <section class="hero">
     <div class="container hero__grid">
       <div class="hero__copy">
-        <Kicker
-          label="Live"
-          text={`${todays.length} ${todays.length === 1 ? 'story' : 'stories'} today`}
-          href={stories.length === 1 ? '/editions' : '#latest'}
-        />
+        <p class="dateline">
+          <span>{isToday ? 'Today' : 'Last filed'}, {fmtDate(briefDay)}</span>
+          <span>{brief.length} {brief.length === 1 ? 'story' : 'stories'}{isToday ? ' so far' : ''}</span>
+        </p>
 
         <h1 class={lead ? 'hero__title hero__title--story' : 'hero__title'}>
-          {lead ? lead.data.title : 'The AI desk that cites its sources.'}
+          {lead ? lead.data.title : 'The AI wire that cites its sources.'}
         </h1>
 
         <p class="lede">{lead ? lead.data.dek : SITE.tagline}</p>
 
-        <p class="hero__meta">
-          <span>{heroStamp}</span>
-          <span>{heroCheck}</span>
-        </p>
+        {lead && (
+          <p class="hero__meta">
+            <span>{CHANNELS[lead.data.channel].label}</span>
+            <span>{lead.data.readingTime} min read</span>
+            <span>{lead.data.sources.length} sources</span>
+            <span>{relTime(lead.data.publishedAt)}</span>
+          </p>
+        )}
 
         <div class="hero__actions">
           {lead ? (
@@ -108,123 +112,183 @@ const schema = {
               Read the lead story
             </a>
           ) : (
-            <a class="btn btn--primary" href="/rss.xml">
-              Subscribe via RSS
+            <a class="btn btn--primary" href="/latest">
+              Open the archive
             </a>
           )}
-          <a class="link-arrow" href="/editions">
-            All editions
-            <span aria-hidden="true">→</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="hero__console">
-        <EditionConsole
-          headline={consoleHeadline}
-          editions={editionRows}
-          sources={sourceCount}
-          status={consoleStatus}
-          statusTone={todays.length > 0 ? 'sage' : 'line'}
-        />
-      </div>
-    </div>
-  </section>
-
-  <section class="stats">
-    <div class="container">
-      <StatStrip
-        items={[
-          { label: 'Stories today', value: todays.length },
-          { label: 'Sources cited today', value: sourceCount },
-          { label: 'Channels covered', value: `${channelsCovered}/${CHANNEL_LIST.length}` },
-          { label: 'Editions filed', value: editionsFiled },
-        ]}
-      />
-    </div>
-  </section>
-
-  {lead && (
-    <section class="section lead-section" aria-labelledby="lead-heading">
-      <div class="container">
-        <div class="lead-block">
-          <div class="lead-block__main">
-            <p class="label">The lead story</p>
-            <h2 id="lead-heading" class="visually-hidden">{lead.data.title}</h2>
-            <p class="lead-meta">
-              <span>{CHANNELS[lead.data.channel].label}</span>
-              <span>{EDITIONS[lead.data.edition].label}</span>
-              <span>{lead.data.readingTime} min read</span>
-              <span>{fmtTime(lead.data.publishedAt)} IST</span>
-            </p>
-            {leadExcerpt && <p class="lead-excerpt">{leadExcerpt}</p>}
-            <a class="link-arrow" href={`/story/${lead.id}`}>
-              Read the story
+          {earlier.length > 0 && (
+            <a class="link-arrow" href="#earlier">
+              Earlier stories
               <span aria-hidden="true">→</span>
             </a>
-          </div>
+          )}
         </div>
       </div>
-    </section>
-  )}
 
-  {(stories.length === 0 || latest.length > 0) && (
-    <section class="section section--tight" id="latest" aria-labelledby="latest-heading">
-      <div class="container">
-        <SectionHead
-          title="Latest"
-          id="latest-heading"
-          action={stories.length > 0 ? { href: '/editions', label: 'All editions' } : undefined}
-        />
+      <aside class="wire" aria-labelledby="wire-heading">
+        <div class="wire__head">
+          <h2 id="wire-heading" class="wire__title">The wire</h2>
+          <span class="wire__stamp">
+            {lastUpdated ? `Updated ${fmtTime(lastUpdated)} IST` : 'Desk open'}
+          </span>
+        </div>
 
-        {stories.length === 0 ? (
-          <p class="empty-note">
-            No stories filed yet. The next edition files at {nextCut} IST.
-          </p>
+        {wire.length === 0 ? (
+          <p class="wire__empty">Nothing filed yet. The first check runs at 06:00 IST.</p>
         ) : (
-          <ol class="rows">
-            {latest.map((story, index) => (
-              <StoryRow story={story} index={index + 1} />
+          <ol class="wire__list">
+            {wire.map((entry) => (
+              <li class:list={['wire__item', { 'is-lead': entry === lead }]}>
+                <a href={`/story/${entry.id}`}>
+                  <span class="wire__time">
+                    <time datetime={entry.data.publishedAt.toISOString()}>{fmtTime(entry.data.publishedAt)}</time>
+                    <span class="wire__channel">{CHANNELS[entry.data.channel].short}</span>
+                  </span>
+                  <span class="wire__headline">{entry.data.title}</span>
+                </a>
+              </li>
             ))}
           </ol>
         )}
+
+        <p class="wire__foot">
+          {isToday ? 'Filed today' : `Filed ${fmtDate(briefDay)}`} · {sourceCount} sources linked · {UPDATE_COPY}
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--tight" id="brief" aria-labelledby="brief-heading">
+    <div class="container">
+      <SectionHead
+        title={isToday ? "Today's brief" : `The brief · ${fmtDate(briefDay)}`}
+        id="brief-heading"
+        action={{ href: '/latest', label: 'Everything filed' }}
+      />
+
+      <div class="filters" role="group" aria-label="Filter the brief by topic" data-filters>
+        <button type="button" class="filter is-on" data-filter="all" aria-pressed="true">All topics</button>
+        {CHANNEL_LIST.map((channel) => (
+          <button type="button" class="filter" data-filter={channel.slug} aria-pressed="false">
+            {channel.short}
+            <span class="filter__count">
+              {brief.filter((entry) => entry.data.channel === channel.slug).length}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {brief.length === 0 ? (
+        <p class="empty-note">No stories on file yet. The first check runs at 06:00 IST.</p>
+      ) : (
+        <ol class="brief" data-brief>
+          {brief.map((entry, index) => (
+            <li class="brief__row" data-channel={entry.data.channel} data-reveal style={`--i:${index}`}>
+              <a href={`/story/${entry.id}`}>
+                <span class="brief__index" aria-hidden="true">{pad(index + 1)}</span>
+                <span class="brief__main">
+                  <span class="brief__top">
+                    <span class="chip chip--line">{CHANNELS[entry.data.channel].short}</span>
+                    <span class="brief__title">{entry.data.title}</span>
+                  </span>
+                  <span class="brief__dek">{entry.data.dek}</span>
+                </span>
+                <span class="brief__meta">
+                  <time datetime={entry.data.publishedAt.toISOString()}>{fmtTime(entry.data.publishedAt)} IST</time>
+                  <span>{entry.data.readingTime} min</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      )}
+
+      <p class="brief__empty-filter" data-empty-filter hidden>Nothing filed under that topic in this brief.</p>
+    </div>
+  </section>
+
+  <section class="section topics" id="topics" aria-labelledby="topics-heading">
+    <div class="container">
+      <SectionHead title="By topic" id="topics-heading" label="The latest in each" />
+
+      <div class="topic-grid">
+        {topics.map((topic, index) => (
+          <section class="topic" aria-labelledby={`topic-${topic.slug}`} data-reveal style={`--i:${index}`}>
+            <header class="topic__head">
+              <h3 id={`topic-${topic.slug}`}>
+                <a href={`/channel/${topic.slug}`}>{topic.label}</a>
+              </h3>
+              <p class="topic__blurb">{topic.blurb}</p>
+              <p class="topic__count">
+                {topic.total} {topic.total === 1 ? 'story' : 'stories'}
+                {topic.fresh > 0 && <span class="topic__fresh"> · {topic.fresh} today</span>}
+              </p>
+            </header>
+
+            {topic.latest.length === 0 ? (
+              <p class="topic__empty">Nothing filed here yet.</p>
+            ) : (
+              <ol class="topic__list">
+                {topic.latest.map((entry) => (
+                  <li>
+                    <a href={`/story/${entry.id}`}>
+                      <span class="topic__title">{entry.data.title}</span>
+                      <span class="topic__time">
+                        {fmtDate(entry.data.publishedAt)} · {entry.data.readingTime} min
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            )}
+
+            <a class="link-arrow topic__more" href={`/channel/${topic.slug}`}>
+              All {topic.short}
+              <span aria-hidden="true">→</span>
+            </a>
+          </section>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {earlier.length > 0 && (
+    <section class="section section--tight earlier" id="earlier" aria-labelledby="earlier-heading">
+      <div class="container">
+        <SectionHead title="Earlier" id="earlier-heading" label="Before this brief" />
+
+        <ol class="earlier__list">
+          {earlier.map((entry) => (
+            <li class="earlier__row">
+              <a href={`/story/${entry.id}`}>
+                <span class="earlier__date">{fmtDate(entry.data.publishedAt)}</span>
+                <span class="earlier__title">{entry.data.title}</span>
+                <span class="earlier__topic">{CHANNELS[entry.data.channel].short}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   )}
 
-  <section class="section band" id="channels" aria-labelledby="channels-heading">
-    <div class="container">
-      <SectionHead title="Channels" id="channels-heading" />
-
-      <ol class="rows">
-        {channelCounts.map((channel, index) => (
-          <li class="channel-row" data-reveal style={`--i:${index}`}>
-            <a href={`/channel/${channel.slug}`}>
-              <span class="channel-row__index" aria-hidden="true">{pad(index + 1)}</span>
-              <span class="channel-row__main">
-                <span class="channel-row__title">{channel.label}</span>
-                <span class="channel-row__blurb">{channel.blurb}</span>
-              </span>
-              <span class="channel-row__meta">
-                {channel.count} {channel.count === 1 ? 'story' : 'stories'}
-                <span aria-hidden="true">→</span>
-              </span>
-            </a>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  <section class="cta-band" aria-labelledby="cta-heading">
-    <div class="container cta-band__inner">
+  <section class="section archive-band" aria-labelledby="archive-heading">
+    <div class="container archive-band__inner">
       <div>
-        <h2 id="cta-heading">{nextEditionTomorrow ? 'Tomorrow' : 'Today'}, {nextCut} IST.</h2>
-        <p class="cta-band__copy">Three editions a day, each one checked against primary sources before it files.</p>
+        <h2 id="archive-heading">{totals.stories} stories on file.</h2>
+        <p class="archive-band__copy">
+          {totals.sources} sources linked across {totals.topics} topics, the first filed
+          {' '}{firstFiled ? fmtDate(firstFiled) : 'today'}. Every story stays in the archive with its
+          sources attached.
+        </p>
       </div>
-      <a class="btn btn--invert" href="/rss.xml">
-        Subscribe
-      </a>
+      <div class="archive-band__actions">
+        <a class="btn btn--primary" href="/latest">Open the archive</a>
+        <a class="link-arrow" href="/rss.xml">
+          RSS
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
     </div>
   </section>
 </Base>
@@ -251,14 +315,26 @@ const schema = {
     display: grid;
     grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
     gap: clamp(32px, 5vw, 88px);
-    align-items: center;
-    padding-block: clamp(40px, 7vw, 104px) clamp(48px, 8vw, 112px);
+    align-items: start;
+    padding-block: clamp(36px, 6vw, 88px) clamp(40px, 6vw, 80px);
   }
 
   .hero__copy {
     display: grid;
     justify-items: start;
     gap: var(--space-5);
+  }
+
+  .dateline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin: 0;
+    color: var(--ink-mute);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
   .hero__copy h1 {
@@ -291,86 +367,247 @@ const schema = {
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-5);
-    padding-top: var(--space-3);
+    padding-top: var(--space-2);
   }
 
-  .hero__console {
+  /* ---------- the wire ---------- */
+
+  .wire {
     display: grid;
     gap: var(--space-3);
+    padding: var(--space-5);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+  }
+
+  .wire__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .wire__title {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .wire__stamp {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .wire__list {
+    display: grid;
+    gap: 0;
+  }
+
+  .wire__item + .wire__item {
+    border-top: 1px solid var(--line-soft);
+  }
+
+  .wire__item a {
+    display: grid;
+    grid-template-columns: 74px minmax(0, 1fr);
+    gap: var(--space-3);
+    align-items: baseline;
+    padding-block: 12px;
+    min-height: 44px;
+    transition: background-color var(--duration) var(--ease);
+  }
+
+  .wire__item a:hover {
+    background: color-mix(in srgb, var(--paper-band) 55%, transparent);
+  }
+
+  .wire__time {
+    display: grid;
+    gap: 2px;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+  }
+
+  .wire__channel {
+    color: var(--ink-soft);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .wire__headline {
+    font-size: 0.9375rem;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+
+  .wire__item.is-lead .wire__headline {
+    font-weight: 500;
+  }
+
+  .wire__item a:hover .wire__headline {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .wire__foot,
+  .wire__empty {
+    margin: 0;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--line);
+    color: var(--ink-mute);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ---------- filters ---------- */
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-bottom: var(--space-4);
+  }
+
+  .filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 38px;
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+      border-color var(--duration) var(--ease),
+      color var(--duration) var(--ease),
+      background-color var(--duration) var(--ease);
+  }
+
+  .filter:hover {
+    border-color: var(--ink-mute);
+    color: var(--ink);
+  }
+
+  .filter.is-on {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .filter__count {
+    font-size: var(--text-micro);
+    opacity: 0.65;
+  }
+
+  /* ---------- brief ---------- */
+
+  .brief {
+    border-top: 1px solid var(--line);
+  }
+
+  .brief__row {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .brief__row[hidden] {
+    display: none;
+  }
+
+  .brief__row a {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 120px;
+    gap: var(--space-4);
+    align-items: start;
+    padding-block: var(--space-5);
+    transition: background-color var(--duration) var(--ease);
+  }
+
+  .brief__row a:hover {
+    background: color-mix(in srgb, var(--paper-band) 60%, transparent);
+  }
+
+  .brief__index {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    padding-top: 5px;
+  }
+
+  .brief__main {
+    display: grid;
+    gap: 6px;
     min-width: 0;
   }
 
-  /* ---------- stats ---------- */
-
-  .stats {
-    padding-bottom: clamp(32px, 4vw, 56px);
-  }
-
-  /* ---------- lead ---------- */
-
-  .lead-section {
-    padding-top: clamp(48px, 6vw, 88px);
-  }
-
-  .lead-block {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    padding-top: var(--space-5);
-  }
-
-  .lead-block__main {
-    display: grid;
-    justify-items: start;
-    gap: var(--space-4);
-    max-width: 900px;
-  }
-
-  .lead-block h2 {
-    font-size: clamp(1.9rem, 2.4vw + 1rem, 3.25rem);
-    line-height: 1.06;
-    max-width: 22ch;
-  }
-
-  .lead-block h2 a {
-    transition: color var(--duration) var(--ease);
-  }
-
-  .lead-block h2 a:hover {
-    color: var(--accent);
-  }
-
-  .lead-dek {
-    max-width: 58ch;
-    font-size: var(--text-lead);
-    line-height: 1.55;
-    color: var(--ink-soft);
-  }
-
-  .lead-meta {
+  .brief__top {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 18px;
-    max-width: none;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .brief__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.125rem, 0.35vw + 1.05rem, 1.375rem);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+
+  .brief__row a:hover .brief__title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .brief__dek {
+    max-width: 62ch;
+    font-size: var(--text-ui);
+    line-height: 1.5;
     color: var(--ink-mute);
+  }
+
+  .brief__meta {
+    display: grid;
+    justify-items: end;
+    gap: 4px;
     font-family: var(--font-mono);
     font-size: var(--text-label);
     letter-spacing: 0.06em;
     text-transform: uppercase;
-  }
-
-  .lead-excerpt {
-    max-width: 56ch;
-    padding-left: var(--space-5);
-    border-left: 1px solid var(--line);
     color: var(--ink-mute);
-    font-size: 1.0625rem;
-    line-height: 1.65;
+    padding-top: 3px;
+    text-align: right;
   }
 
-  /* ---------- empty ---------- */
-
-  .empty-note {
-    max-width: none;
+  .brief__empty-filter {
     padding-block: var(--space-6);
     color: var(--ink-mute);
     font-family: var(--font-mono);
@@ -379,100 +616,212 @@ const schema = {
     text-transform: uppercase;
   }
 
-  /* ---------- channels ---------- */
+  /* ---------- topics ---------- */
 
-  .channel-row a {
+  .topics {
+    background: var(--paper-band);
+    border-block: 1px solid var(--line);
+  }
+
+  .topic-grid {
     display: grid;
-    grid-template-columns: 44px minmax(0, 1fr) 160px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+  }
+
+  .topic {
+    display: grid;
+    align-content: start;
     gap: var(--space-4);
-    align-items: baseline;
-    padding-block: var(--space-5);
-    transition: background-color var(--duration) var(--ease);
+    padding: clamp(20px, 2.4vw, 32px);
+    background: var(--paper);
   }
 
-  .channel-row a:hover {
-    background: color-mix(in srgb, var(--paper) 60%, transparent);
-  }
-
-  .channel-row__index {
-    font-family: var(--font-mono);
-    font-size: var(--text-label);
-    letter-spacing: 0.06em;
-    color: var(--ink-soft);
-  }
-
-  .channel-row__main {
+  .topic__head {
     display: grid;
-    gap: 4px;
-    min-width: 0;
+    gap: 6px;
   }
 
-  .channel-row__title {
-    font-family: var(--font-display);
-    font-size: clamp(1.25rem, 0.6vw + 1.1rem, 1.6rem);
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    line-height: 1.2;
+  .topic__head h3 {
+    margin: 0;
+    font-size: clamp(1.35rem, 0.8vw + 1.2rem, 1.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
   }
 
-  .channel-row__blurb {
-    max-width: 60ch;
+  .topic__head h3 a {
+    transition: color var(--duration) var(--ease);
+  }
+
+  .topic__head h3 a:hover {
+    color: var(--accent);
+  }
+
+  .topic__blurb {
+    margin: 0;
+    max-width: 46ch;
     font-size: var(--text-ui);
     line-height: 1.5;
     color: var(--ink-soft);
   }
 
-  .channel-row__meta {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 10px;
+  .topic__count {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .topic__fresh {
+    color: var(--sage-deep);
+  }
+
+  .topic__list {
+    display: grid;
+    border-top: 1px solid var(--line);
+  }
+
+  .topic__list li {
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .topic__list a {
+    display: grid;
+    gap: 4px;
+    padding-block: 12px;
+    min-height: 44px;
+  }
+
+  .topic__title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+  }
+
+  .topic__list a:hover .topic__title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .topic__time {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .topic__empty {
+    margin: 0;
+    padding-block: var(--space-4);
+    color: var(--ink-mute);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .topic__more {
+    justify-self: start;
+  }
+
+  /* ---------- earlier ---------- */
+
+  .earlier {
+    padding-top: clamp(40px, 5vw, 64px);
+  }
+
+  .earlier__list {
+    border-top: 1px solid var(--line);
+  }
+
+  .earlier__row {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .earlier__row a {
+    display: grid;
+    grid-template-columns: 130px minmax(0, 1fr) 60px;
+    gap: var(--space-4);
+    align-items: baseline;
+    padding-block: var(--space-4);
+    transition: background-color var(--duration) var(--ease);
+  }
+
+  .earlier__row a:hover {
+    background: color-mix(in srgb, var(--paper-band) 60%, transparent);
+  }
+
+  .earlier__date,
+  .earlier__topic {
     font-family: var(--font-mono);
     font-size: var(--text-label);
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--ink-soft);
-    white-space: nowrap;
+    color: var(--ink-mute);
   }
 
-  .channel-row__meta span {
-    transition: transform var(--duration) var(--ease);
+  .earlier__topic {
+    text-align: right;
   }
 
-  .channel-row a:hover .channel-row__meta span {
-    transform: translateX(3px);
+  .earlier__title {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--ink);
   }
 
-  /* ---------- cta ---------- */
-
-  .cta-band {
-    background: var(--night);
-    color: var(--night-ink);
-    border-top: 1px solid var(--night-line);
+  .earlier__row a:hover .earlier__title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
   }
 
-  .cta-band__inner {
+  /* ---------- archive band ---------- */
+
+  .archive-band {
+    background: var(--paper-deep);
+    border-top: 1px solid var(--line);
+  }
+
+  .archive-band__inner {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-5);
-    padding-block: clamp(40px, 5vw, 64px);
   }
 
-  .cta-band h2 {
-    color: var(--night-ink);
+  .archive-band h2 {
+    margin: 0;
     font-size: clamp(1.75rem, 2vw + 1rem, 2.75rem);
     font-variant-numeric: tabular-nums;
-    overflow-wrap: break-word;
-    min-width: 0;
   }
 
-  .cta-band__copy {
-    max-width: 48ch;
+  .archive-band__copy {
+    max-width: 52ch;
     margin-top: var(--space-3);
-    color: var(--night-mute);
+    color: var(--ink-soft);
     font-size: var(--text-ui);
+  }
+
+  .archive-band__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-5);
   }
 
   /* ---------- responsive ---------- */
@@ -483,29 +832,94 @@ const schema = {
       gap: var(--space-6);
     }
 
-    .hero__copy h1 {
-      max-width: 18ch;
-    }
-
-    .hero__console {
-      max-width: 560px;
+    .topic-grid {
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 
   @media (max-width: 720px) {
-    .channel-row a {
+    .brief__row a {
       grid-template-columns: 32px minmax(0, 1fr);
       gap: var(--space-3);
+      padding-block: var(--space-4);
     }
 
-    .channel-row__meta {
+    .brief__meta {
       grid-column: 2;
-      justify-content: flex-start;
-      padding-top: 4px;
+      justify-items: start;
+      display: flex;
+      gap: 12px;
+      padding-top: 0;
     }
 
-    .lead-excerpt {
-      padding-left: var(--space-4);
+    .earlier__row a {
+      grid-template-columns: minmax(0, 1fr) 52px;
+      gap: var(--space-2) var(--space-3);
+    }
+
+    .earlier__date {
+      grid-column: 1 / -1;
+    }
+
+    .wire__item a {
+      grid-template-columns: 64px minmax(0, 1fr);
     }
   }
 </style>
+
+<script>
+  const KEY = 'og-brief-filter';
+  const CHANNELS = ['ai', 'llm', 'ml', 'technology'];
+
+  const initFilters = () => {
+    const group = document.querySelector<HTMLElement>('[data-filters]');
+    const list = document.querySelector<HTMLElement>('[data-brief]');
+    if (!group || !list) return;
+
+    const buttons = Array.from(group.querySelectorAll<HTMLButtonElement>('[data-filter]'));
+    const rows = Array.from(list.querySelectorAll<HTMLElement>('[data-channel]'));
+    const empty = document.querySelector<HTMLElement>('[data-empty-filter]');
+
+    let current = 'all';
+    try {
+      const stored = localStorage.getItem(KEY);
+      if (stored === 'all' || (stored && CHANNELS.includes(stored))) current = stored;
+    } catch {
+      /* storage blocked: the filter still works for this visit */
+    }
+
+    const apply = (value: string) => {
+      current = value;
+      buttons.forEach((button) => {
+        const on = button.dataset.filter === value;
+        button.classList.toggle('is-on', on);
+        button.setAttribute('aria-pressed', String(on));
+      });
+
+      let shown = 0;
+      rows.forEach((row) => {
+        const match = value === 'all' || row.dataset.channel === value;
+        row.hidden = !match;
+        if (match) shown += 1;
+      });
+
+      if (empty) empty.hidden = shown > 0;
+
+      try {
+        localStorage.setItem(KEY, value);
+      } catch {
+        /* ignore */
+      }
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => apply(button.dataset.filter ?? 'all'));
+    });
+
+    apply(current);
+  };
+
+  document.addEventListener('astro:page-load', initFilters);
+  if (document.readyState !== 'loading') initFilters();
+  else document.addEventListener('DOMContentLoaded', initFilters);
+</script>

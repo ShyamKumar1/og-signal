@@ -2,7 +2,6 @@
 title: "Cloudera ships a sovereignty bundle that can run with no network at all"
 dek: "The package pairs Cloudera's data platforms with Mistral's open-weight models and supports fully air-gapped deployments, not just sovereign clouds."
 channel: "technology"
-edition: "morning"
 publishedAt: "2026-11-25T04:30:00+05:30"
 readingTime: 3
 tags: ["sovereignty", "air gap", "mistral", "data governance"]

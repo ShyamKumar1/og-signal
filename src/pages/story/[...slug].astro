@@ -10,8 +10,8 @@ import Base from '../../layouts/Base.astro';
 import Chip from '../../components/Chip.astro';
 import SectionHead from '../../components/SectionHead.astro';
 import StoryRow from '../../components/StoryRow.astro';
-import { CHANNELS, EDITIONS, SITE } from '../../lib/site';
-import { fmtDate, fmtStamp, hostOf, pad } from '../../lib/format';
+import { CHANNELS, SITE } from '../../lib/site';
+import { fmtDate, fmtStamp, fmtTime, hostOf, pad } from '../../lib/format';
 
 export async function getStaticPaths() {
   const stories = await getCollection('stories');
@@ -27,7 +27,6 @@ interface Props {
 const { story } = Astro.props;
 const { Content, headings } = await render(story);
 const channel = CHANNELS[story.data.channel];
-const edition = EDITIONS[story.data.edition];
 const toc = headings.filter((heading) => heading.depth === 2);
 
 const allStories = await getCollection('stories');
@@ -95,7 +94,8 @@ const schema = {
           <header class="article-head">
             <p class="article-kicker">
               <a href={`/channel/${channel.slug}`} data-pagefind-meta="channel">{channel.short}</a>
-              <span>{edition.label}</span>
+              <span>{fmtDate(story.data.publishedAt)}</span>
+              <span>{fmtTime(story.data.publishedAt)} IST</span>
               <span>{story.data.readingTime} min read</span>
             </p>
 

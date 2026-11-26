@@ -2,7 +2,6 @@
 title: "Baidu put Apache 2.0 on a 280-billion-parameter preview and called it unfinished"
 dek: "ERNIE 5.5 Flash Preview ships with a million-token context and weights developers can actually use, while Baidu says post-training is still running."
 channel: "llm"
-edition: "morning"
 publishedAt: "2026-11-26T06:00:00+05:30"
 readingTime: 3
 tags: ["baidu", "ernie", "open-weights", "apache-2-0"]

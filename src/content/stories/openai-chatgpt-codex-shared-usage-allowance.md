@@ -2,7 +2,6 @@
 title: "OpenAI will meter ChatGPT and Codex on one shared token allowance from December"
 dek: "Plus, Pro and Business subscribers get a single pool for both products, measured in tokens, with Instant chat carved out and no published size for the pool."
 channel: "ai"
-edition: "morning"
 publishedAt: "2026-11-26T06:00:00+05:30"
 readingTime: 3
 tags: ["openai", "chatgpt", "codex", "pricing"]

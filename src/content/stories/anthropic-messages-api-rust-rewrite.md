@@ -2,7 +2,6 @@
 title: "Anthropic moved its Messages API to Rust and found verification was the bottleneck"
 dek: "Claude wrote most of the merged code, but the migration only worked once Anthropic replayed live traffic against both versions instead of trusting its test suite."
 channel: "technology"
-edition: "morning"
 publishedAt: "2026-11-26T06:00:00+05:30"
 readingTime: 3
 tags: ["anthropic", "rust", "agents", "engineering"]

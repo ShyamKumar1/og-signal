@@ -2,7 +2,6 @@
 title: "SambaNova and Supermicro plan 10,000 inference chips for neoclouds"
 dek: "The first racks of SN50 systems go to neoclouds and sovereign clouds, mixing inference accelerators with GPUs before enterprises get a look."
 channel: "technology"
-edition: "morning"
 publishedAt: "2026-11-25T04:30:00+05:30"
 readingTime: 3
 tags: ["inference", "silicon", "data centres", "sovereign cloud"]

@@ -2,7 +2,6 @@
 title: "XPENG says one world model can plan for cars, boats, drones and humanoids"
 dek: "The Guangzhou carmaker claims WorldGPT is the first world model to predict and plan across six machine types, with 12 benchmark first places to back it."
 channel: "ai"
-edition: "morning"
 publishedAt: "2026-11-25T04:30:00+05:30"
 readingTime: 4
 tags: ["xpeng", "world-models", "robotics", "autonomous-driving"]

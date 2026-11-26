@@ -2,7 +2,6 @@
 title: "Marlowe raises $277 million seed round to build inference sites without Nvidia"
 dek: "The company says the round values it at $1.15 billion and that its first Etched-based site opens in December for an AI coding customer."
 channel: "technology"
-edition: "morning"
 publishedAt: "2026-11-25T06:15:00+05:30"
 readingTime: 3
 tags: ["ai-infrastructure", "inference", "funding", "chips"]

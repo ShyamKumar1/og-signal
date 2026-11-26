@@ -1,1 +1,1 @@
-- 2026-11-25 — Launch. Six stories filed in the first morning edition; no corrections since.
+- 2026-11-25 — Launch. Six stories filed on the first day; no corrections since.

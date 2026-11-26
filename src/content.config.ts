@@ -19,7 +19,6 @@ const stories = defineCollection({
     title: z.string().min(12).max(110),
     dek: z.string().min(30).max(260),
     channel: z.enum(['ai', 'llm', 'ml', 'technology']),
-    edition: z.enum(['morning', 'afternoon', 'night']),
     publishedAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
     readingTime: z.number().min(1).max(30),

@@ -2,7 +2,6 @@
 title: "OpenAI and Anthropic staff say some unreleased models are too unsafe to ship"
 dek: "More than two dozen sources told Axios that employees at both labs doubt a technical fix exists for their most capable internal models."
 channel: "ai"
-edition: "morning"
 publishedAt: "2026-11-25T06:15:00+05:30"
 readingTime: 3
 tags: ["openai", "anthropic", "ai-safety", "frontier-models"]

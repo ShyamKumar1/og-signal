@@ -2,7 +2,6 @@
 title: "AOI signs a four-year optical supply deal worth about $2.2 billion"
 dek: "Most of the committed money lands in 2027, the buyer put up no capital, and the $10 billion figure is a forecast rather than an order."
 channel: "technology"
-edition: "morning"
 publishedAt: "2026-11-25T06:15:00+05:30"
 readingTime: 3
 tags: ["optical-networking", "data-centres", "supply-agreements", "ai-infrastructure"]

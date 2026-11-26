@@ -2,7 +2,6 @@
 title: "Two labs shipped open weights on the same day, 554 billion parameters apart"
 dek: "MemTensor's 554B memory-native model and PrismML's 5.9GB ternary model landed on 24 November, aimed at opposite ends of deployment."
 channel: "llm"
-edition: "morning"
 publishedAt: "2026-11-25T04:30:00+05:30"
 readingTime: 4
 tags: ["open-weights", "memory", "quantisation", "inference"]

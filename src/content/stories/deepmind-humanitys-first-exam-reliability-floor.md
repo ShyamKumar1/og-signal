@@ -2,7 +2,6 @@
 title: "DeepMind's new exam scores the floor, and the best model manages 92.4 per cent"
 dek: "Humanity's First Exam asks 544 elementary questions in 136 families, and Google's report finds 73 per cent of wrong answers come from visual perception."
 channel: "ml"
-edition: "morning"
 publishedAt: "2026-11-26T06:00:00+05:30"
 readingTime: 3
 tags: ["benchmarks", "deepmind", "reliability", "evaluation"]

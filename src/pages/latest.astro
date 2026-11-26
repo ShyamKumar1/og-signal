@@ -1,0 +1,239 @@
+---
+/**
+ * Latest — the archive.
+ * Every published story, grouped by the day it was filed, newest first.
+ * No editions, no slots: a day is a heading and the stories under it.
+ */
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Kicker from '../components/Kicker.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { CHANNELS, SITE } from '../lib/site';
+import { fmtDate, fmtTime, isoDay } from '../lib/format';
+
+type Story = CollectionEntry<'stories'>;
+
+const stories = (await getCollection('stories'))
+  .filter((entry) => !entry.data.draft)
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+
+const byDay = new Map<string, Story[]>();
+for (const story of stories) {
+  const day = isoDay(story.data.publishedAt);
+  const list = byDay.get(day);
+  if (list) list.push(story);
+  else byDay.set(day, [story]);
+}
+
+const days = [...byDay.entries()].map(([day, entries]) => ({ day, entries }));
+const sourceCount = new Set(stories.flatMap((entry) => entry.data.sources.map((source) => source.url))).size;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: `Latest · ${SITE.title}`,
+  url: new URL(Astro.url.pathname, SITE.url).href,
+  description: `Every story on ${SITE.title}, newest first.`,
+  isPartOf: { '@type': 'WebSite', name: SITE.title, url: SITE.url },
+};
+---
+
+<Base
+  title="Latest"
+  description={`Every story on ${SITE.title}, newest first, grouped by the day it was filed.`}
+  schema={schema}
+>
+  <section class="archive">
+    <div class="container">
+      <header class="page-head">
+        <Kicker
+          label="Archive"
+          text={`${stories.length} ${stories.length === 1 ? 'story' : 'stories'} on file`}
+        />
+        <h1>Everything, newest first.</h1>
+        <p class="lede">
+          The whole wire in reverse order, grouped by the day it was filed. Each story keeps its
+          sources and its verification stamp.
+        </p>
+        <p class="page-head__meta">
+          <span>{days.length} {days.length === 1 ? 'day' : 'days'}</span>
+          <span>{sourceCount} sources linked</span>
+          <span>All times IST</span>
+        </p>
+      </header>
+
+      <SectionHead
+        title="Filing history"
+        label="Newest first"
+        action={stories.length > 0 ? { href: '/rss.xml', label: 'Subscribe' } : undefined}
+      />
+
+      {days.length === 0 ? (
+        <p class="empty-note">Nothing filed yet.</p>
+      ) : (
+        <div class="days">
+          {days.map((day) => (
+            <section class="day" aria-labelledby={`day-${day.day}`}>
+              <header class="day__head">
+                <h2 id={`day-${day.day}`} class="day__date">{fmtDate(day.day)}</h2>
+                <span class="day__count">
+                  {day.entries.length} {day.entries.length === 1 ? 'story' : 'stories'}
+                </span>
+              </header>
+
+              <ol class="day__list">
+                {day.entries.map((story) => (
+                  <li class="entry">
+                    <a href={`/story/${story.id}`}>
+                      <span class="entry__time">
+                        <time datetime={story.data.publishedAt.toISOString()}>
+                          {fmtTime(story.data.publishedAt)}
+                        </time>
+                      </span>
+                      <span class="entry__main">
+                        <span class="entry__title">{story.data.title}</span>
+                        <span class="entry__dek">{story.data.dek}</span>
+                      </span>
+                      <span class="entry__meta">
+                        <span class="chip chip--line">{CHANNELS[story.data.channel].short}</span>
+                        <span>{story.data.readingTime} min</span>
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .archive {
+    padding-bottom: var(--section-y);
+  }
+
+  .days {
+    display: grid;
+    gap: clamp(36px, 4vw, 56px);
+    padding-top: var(--space-4);
+  }
+
+  .day {
+    border-top: 1px solid var(--line);
+    padding-top: var(--space-4);
+  }
+
+  .day__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-bottom: var(--space-3);
+  }
+
+  .day__date {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .day__count {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .day__list {
+    display: grid;
+  }
+
+  .entry {
+    border-top: 1px solid var(--line-soft);
+  }
+
+  .entry a {
+    display: grid;
+    grid-template-columns: 60px minmax(0, 1fr) 120px;
+    gap: var(--space-4);
+    align-items: start;
+    padding-block: var(--space-4);
+    transition: background-color var(--duration) var(--ease);
+  }
+
+  .entry a:hover {
+    background: color-mix(in srgb, var(--paper-band) 60%, transparent);
+  }
+
+  .entry__time {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    padding-top: 4px;
+  }
+
+  .entry__main {
+    display: grid;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .entry__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.0625rem, 0.3vw + 1rem, 1.25rem);
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    overflow-wrap: break-word;
+  }
+
+  .entry a:hover .entry__title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .entry__dek {
+    max-width: 70ch;
+    font-size: var(--text-ui);
+    line-height: 1.5;
+    color: var(--ink-mute);
+  }
+
+  .entry__meta {
+    display: grid;
+    justify-items: end;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    text-align: right;
+    padding-top: 2px;
+  }
+
+  @media (max-width: 720px) {
+    .entry a {
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: var(--space-3);
+    }
+
+    .entry__meta {
+      grid-column: 2;
+      justify-items: start;
+      display: flex;
+      gap: 10px;
+    }
+  }
+</style>

@@ -39,9 +39,8 @@ const BANNED = [
   'brace yourselves', 'the future is here', 'only time will tell',
 ];
 
-const REQUIRED = ['title', 'dek', 'channel', 'edition', 'publishedAt', 'readingTime', 'tags', 'sources'];
+const REQUIRED = ['title', 'dek', 'channel', 'publishedAt', 'readingTime', 'tags', 'sources'];
 const CHANNELS = ['ai', 'llm', 'ml', 'technology'];
-const EDITIONS = ['morning', 'afternoon', 'night'];
 
 const errors = [];
 const warnings = [];
@@ -84,7 +83,6 @@ for (const file of files) {
     }
   }
   if (data.channel && !CHANNELS.includes(data.channel)) errors.push(`${file}: bad channel "${data.channel}"`);
-  if (data.edition && !EDITIONS.includes(data.edition)) errors.push(`${file}: bad edition "${data.edition}"`);
 
   const title = String(data.title ?? '');
   if (title.length && (title.length < 40 || title.length > 110)) {

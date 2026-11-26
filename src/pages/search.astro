@@ -33,7 +33,7 @@ const storyCount = (await getCollection('stories')).filter((entry) => !entry.dat
 
       <p class="page-head__meta search-foot">
         <span>Prefer to browse?</span>
-        <a href="/editions">Editions archive</a>
+        <a href="/latest">Latest stories</a>
         {CHANNEL_LIST.map((channel) => (
           <a href={`/channel/${channel.slug}`}>{channel.short}</a>
         ))}

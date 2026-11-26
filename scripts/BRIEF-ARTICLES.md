@@ -35,7 +35,6 @@ You are writing the copy for six news articles. The facts are already gathered f
     title: "Sentence case, 60-95 chars, no colon-clickbait, no question mark"
     dek: "One sentence, 90-200 chars, adds information the title does not repeat"
     channel: "ai" | "llm" | "ml" | "technology"
-    edition: "morning"
     publishedAt: "2026-11-25T04:30:00+05:30"
     readingTime: 4
     tags: ["lowercase", "2-5", "tags"]

@@ -3,7 +3,7 @@
  * Site identity, cadence, channels, then the most recent 40 stories.
  */
 import { getCollection } from 'astro:content';
-import { CHANNEL_LIST, CHANNELS, EDITION_ORDER, EDITIONS, SITE } from '../lib/site';
+import { CHANNEL_LIST, CHANNELS, SITE, UPDATE_COPY } from '../lib/site';
 import { fmtDate } from '../lib/format';
 
 export async function GET() {
@@ -12,23 +12,21 @@ export async function GET() {
     .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
     .slice(0, 40);
 
-  const cadence = EDITION_ORDER.map(
-    (edition) => `${EDITIONS[edition].label} (cut-off ${EDITIONS[edition].cut} IST)`,
-  ).join(', ');
-
   const lines = [
     `# ${SITE.title}`,
     '',
     `> ${SITE.description}`,
     '',
-    `${SITE.title} files ${EDITIONS.morning.label}, ${EDITIONS.afternoon.label} and ${EDITIONS.night.label} every day in IST (Asia/Kolkata). ${cadence}. Every story links the primary sources behind its claims.`,
+    `${SITE.title} is a running wire in IST (Asia/Kolkata). ${UPDATE_COPY} Each story carries the primary sources behind its claims.`,
     '',
-    '## Channels',
+    '## Topics',
     '',
     ...CHANNEL_LIST.map(
       (channel) =>
         `- [${channel.label}](${new URL(`/channel/${channel.slug}/`, SITE.url).href}) — ${channel.blurb}`,
     ),
+    '',
+    `- [Latest](${new URL('/latest/', SITE.url).href}) — every story, newest first`,
     '',
     '## Recent stories',
     '',

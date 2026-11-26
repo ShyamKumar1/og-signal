@@ -2,7 +2,6 @@
 title: "Anthropic's Claude Ship can approve a pull request without a human"
 dek: "Approval rules live in a file inside the repository, and Anthropic warns the system can miss bugs and security holes."
 channel: "ai"
-edition: "morning"
 publishedAt: "2026-11-25T06:15:00+05:30"
 readingTime: 3
 tags: ["anthropic", "claude", "developer-tools", "code-review"]
