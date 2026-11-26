@@ -94,6 +94,7 @@ const schema = {
           <header class="article-head">
             <p class="article-kicker">
               <a href={`/channel/${channel.slug}`} data-pagefind-meta="channel">{channel.short}</a>
+              {story.data.research && <a href="/research">Research</a>}
               <span>{fmtDate(story.data.publishedAt)}</span>
               <span>{fmtTime(story.data.publishedAt)} IST</span>
               <span>{story.data.readingTime} min read</span>
@@ -133,6 +134,21 @@ const schema = {
           <section class="story-sources" aria-labelledby="sources-heading" data-pagefind-ignore>
             <SectionHead title="Sources" id="sources-heading" />
             <div class="source-card">
+              {story.data.paper && (
+                <div class="paper-card">
+                  <p class="paper-card__label">The paper</p>
+                  <p class="paper-card__title">{story.data.paper.title}</p>
+                  <p class="paper-card__meta">
+                    {[story.data.paper.venue, story.data.paper.id].filter(Boolean).join(' · ')}
+                  </p>
+                  {story.data.paper.url && (
+                    <a class="paper-card__link" href={story.data.paper.url} target="_blank" rel="noopener noreferrer">
+                      Open the paper
+                      <span aria-hidden="true">↗</span>
+                    </a>
+                  )}
+                </div>
+              )}
               <ol>
                 {story.data.sources.map((source, index) => (
                   <li>
@@ -352,6 +368,59 @@ const schema = {
     color: var(--ink-soft);
     font-size: var(--text-ui);
     line-height: 1.5;
+  }
+
+  .paper-card {
+    display: grid;
+    gap: 4px;
+    padding: var(--space-4);
+    margin-bottom: var(--space-3);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-small);
+    background: var(--paper-band);
+  }
+
+  .paper-card__label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .paper-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+
+  .paper-card__meta {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+  }
+
+  .paper-card__link {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 4px;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .paper-card__link:hover {
+    color: var(--accent);
   }
 
   .story-sources {

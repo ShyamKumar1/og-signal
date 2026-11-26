@@ -27,6 +27,7 @@ export async function GET() {
     ),
     '',
     `- [Latest](${new URL('/latest/', SITE.url).href}) — every story, newest first`,
+    `- [Research](${new URL('/research/', SITE.url).href}) — papers, preprints and technical reports`,
     '',
     '## Recent stories',
     '',

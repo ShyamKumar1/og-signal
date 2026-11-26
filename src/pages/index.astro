@@ -30,6 +30,7 @@ const isToday = briefDay === todayKey;
 const lead = todays.find((entry) => entry.data.lead) ?? todays[0] ?? stories[0];
 const wire = brief.slice(0, 7);
 const earlier = stories.filter((entry) => !brief.includes(entry)).slice(0, 5);
+const research = stories.filter((entry) => entry.data.research).slice(0, 4);
 
 const sourceCount = new Set(brief.flatMap((entry) => entry.data.sources.map((source) => source.url))).size;
 const lastUpdated = stories[0]?.data.updatedAt ?? stories[0]?.data.publishedAt;
@@ -251,6 +252,37 @@ const schema = {
       </div>
     </div>
   </section>
+
+  {research.length > 0 && (
+    <section class="section section--tight research-band" id="research" aria-labelledby="research-heading">
+      <div class="container">
+        <SectionHead
+          title="From the papers"
+          id="research-heading"
+          label="Studies, preprints and technical reports"
+          action={{ href: '/research', label: 'All research' }}
+        />
+
+        <ol class="research-list">
+          {research.map((entry) => (
+            <li class="research-row">
+              <a href={`/story/${entry.id}`}>
+                <span class="research-row__main">
+                  <span class="research-row__title">{entry.data.title}</span>
+                  <span class="research-row__dek">{entry.data.dek}</span>
+                </span>
+                <span class="research-row__meta">
+                  {entry.data.paper?.venue && <span class="research-row__venue">{entry.data.paper.venue}</span>}
+                  <span>{CHANNELS[entry.data.channel].short}</span>
+                  <time datetime={entry.data.publishedAt.toISOString()}>{fmtDate(entry.data.publishedAt)}</time>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )}
 
   {earlier.length > 0 && (
     <section class="section section--tight earlier" id="earlier" aria-labelledby="earlier-heading">
@@ -733,6 +765,87 @@ const schema = {
 
   .topic__more {
     justify-self: start;
+  }
+
+  /* ---------- research ---------- */
+
+  .research-list {
+    border-top: 1px solid var(--line);
+  }
+
+  .research-row {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .research-row a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: var(--space-4);
+    align-items: baseline;
+    padding-block: var(--space-4);
+    transition: background-color var(--duration) var(--ease);
+  }
+
+  .research-row a:hover {
+    background: color-mix(in srgb, var(--paper-band) 60%, transparent);
+  }
+
+  .research-row__main {
+    display: grid;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .research-row__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.0625rem, 0.3vw + 1rem, 1.25rem);
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    overflow-wrap: break-word;
+  }
+
+  .research-row a:hover .research-row__title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .research-row__dek {
+    max-width: 72ch;
+    font-size: var(--text-ui);
+    line-height: 1.5;
+    color: var(--ink-mute);
+  }
+
+  .research-row__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px 14px;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    text-align: right;
+  }
+
+  .research-row__venue {
+    color: var(--sage-deep);
+  }
+
+  @media (max-width: 720px) {
+    .research-row a {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-2);
+    }
+
+    .research-row__meta {
+      justify-content: flex-start;
+      text-align: left;
+    }
   }
 
   /* ---------- earlier ---------- */

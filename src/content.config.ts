@@ -13,12 +13,21 @@ const timelineSchema = z.object({
   note: z.string(),
 });
 
+const paperSchema = z.object({
+  title: z.string(),
+  venue: z.string().optional(),
+  url: z.string().url().optional(),
+  id: z.string().optional(),
+});
+
 const stories = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/stories' }),
   schema: z.object({
     title: z.string().min(12).max(110),
     dek: z.string().min(30).max(260),
     channel: z.enum(['ai', 'llm', 'ml', 'technology']),
+    research: z.boolean().default(false),
+    paper: paperSchema.optional(),
     publishedAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
     readingTime: z.number().min(1).max(30),

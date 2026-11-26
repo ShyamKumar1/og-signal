@@ -1,6 +1,7 @@
 ---
 title: "Anthropic finds unlearning methods hide dangerous knowledge rather than delete it"
 dek: "Two alignment posts make the case for reading models through single neurons, then use that reading to test whether safety training works."
+research: true
 channel: "ml"
 publishedAt: "2026-11-25T06:15:00+05:30"
 readingTime: 3

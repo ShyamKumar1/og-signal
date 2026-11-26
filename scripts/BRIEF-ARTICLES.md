@@ -35,6 +35,7 @@ You are writing the copy for six news articles. The facts are already gathered f
     title: "Sentence case, 60-95 chars, no colon-clickbait, no question mark"
     dek: "One sentence, 90-200 chars, adds information the title does not repeat"
     channel: "ai" | "llm" | "ml" | "technology"
+    research: false
     publishedAt: "2026-11-25T04:30:00+05:30"
     readingTime: 4
     tags: ["lowercase", "2-5", "tags"]
@@ -50,6 +51,18 @@ You are writing the copy for six news articles. The facts are already gathered f
     ---
 
 `readingTime` = round(wordcount / 220), minimum 2.
+
+`research` is `true` only when the story's primary source is a paper, preprint or technical report
+rather than a product announcement. When the factpack gives you paper details, also add:
+
+    paper:
+      title: "exact paper title from the factpack"
+      venue: "conference, journal or lab, from the factpack"
+      id: "arXiv id or DOI, from the factpack"
+      url: "exact url from the factpack"
+
+Omit `paper` entirely if the factpack has no paper details. Never invent a venue, an arXiv id or an
+author list.
 `lead: true` only on the story whose slug is `open-weight-models-554b-and-5-9gb-same-day`.
 Copy `sources` exactly from the factpack for that story, in the same order. Do not invent sources.
 `claimsChecked` stays 0 — a verifier fills it in later.

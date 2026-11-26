@@ -119,6 +119,13 @@ for (const file of files) {
     }
   }
 
+  if (data.paper && typeof data.paper === 'object' && data.paper.url) {
+    if (!/^https?:\/\//.test(String(data.paper.url))) errors.push(`${file}: paper url invalid`);
+    else if (allowedUrls.size && !allowedUrls.has(String(data.paper.url))) {
+      errors.push(`${file}: paper url not in the factpack — ${data.paper.url}`);
+    }
+  }
+
   const bodyWords = words(body);
   if (bodyWords < 500) errors.push(`${file}: body is ${bodyWords} words, under the 500 floor`);
   if (bodyWords > 1100) warnings.push(`${file}: body is ${bodyWords} words, over the 1100 ceiling`);

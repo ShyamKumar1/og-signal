@@ -11,6 +11,7 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
 const navLinks = [
   { href: '/', label: 'Today' },
   { href: '/latest', label: 'Latest' },
+  { href: '/research', label: 'Research' },
 ] as const;
 ---
 
@@ -89,6 +90,7 @@ const navLinks = [
     <nav class="drawer__nav" aria-label="Mobile">
       <a href="/">Today</a>
       <a href="/latest">Latest</a>
+      <a href="/research">Research</a>
       <a href="/about">About</a>
     </nav>
 

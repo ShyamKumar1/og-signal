@@ -1,0 +1,271 @@
+---
+/**
+ * Research — papers, preprints and technical reports.
+ *
+ * A cross-cutting section, not a fifth topic: a paper about language models is
+ * still filed under Language Models, and it also appears here. Stories opt in
+ * with `research: true` in their frontmatter.
+ */
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Kicker from '../components/Kicker.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { CHANNELS, SITE } from '../lib/site';
+import { fmtDate, fmtTime } from '../lib/format';
+
+const stories = (await getCollection('stories'))
+  .filter((entry) => !entry.data.draft && entry.data.research)
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+
+const sourceCount = new Set(stories.flatMap((entry) => entry.data.sources.map((source) => source.url))).size;
+const feed = '/research/rss.xml';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: `Research · ${SITE.title}`,
+  url: new URL(Astro.url.pathname, SITE.url).href,
+  description: 'Papers, preprints and technical reports on artificial intelligence, language models and machine learning.',
+  isPartOf: { '@type': 'WebSite', name: SITE.title, url: SITE.url },
+};
+---
+
+<Base
+  title="Research"
+  description="Papers, preprints and technical reports on AI, language models and machine learning, with what the result does and does not show."
+  schema={schema}
+>
+  <Fragment slot="head">
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.title} · Research`} href={feed} />
+  </Fragment>
+
+  <section class="research">
+    <div class="container">
+      <header class="page-head">
+        <Kicker
+          label="Research"
+          text={`${stories.length} ${stories.length === 1 ? 'paper' : 'papers'} covered`}
+        />
+        <h1>Papers, read closely.</h1>
+        <p class="lede">
+          New studies, preprints and technical reports across AI, language models and machine learning.
+          Each piece says what the result is, what the numbers actually show, and what the authors did
+          not test. The paper itself is linked at the bottom of every story.
+        </p>
+        <p class="page-head__meta">
+          <span>{sourceCount} sources linked</span>
+          <span>Newest first</span>
+          <span>All times IST</span>
+        </p>
+        <div class="page-head__actions">
+          <a class="link-arrow" href={feed}>
+            Research feed
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </header>
+
+      <SectionHead
+        title="Latest research"
+        label="Newest first"
+        action={stories.length > 0 ? { href: '/latest', label: 'All stories' } : undefined}
+      />
+
+      {stories.length === 0 ? (
+        <p class="empty-note">
+          No research stories yet. Papers are added as they are read, usually the day after a release.
+        </p>
+      ) : (
+        <ol class="papers">
+          {stories.map((story, index) => {
+            const paper = story.data.paper;
+            const paperSource = paper?.url ? paper : story.data.sources.find((source) => /arxiv|doi|\.org\/abs/i.test(source.url));
+            return (
+              <li class="paper" data-reveal style={`--i:${index}`}>
+                <span class="paper__index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                <div class="paper__main">
+                  <div class="paper__top">
+                    <span class="chip chip--line">{CHANNELS[story.data.channel].short}</span>
+                    <h2 class="paper__title">
+                      <a href={`/story/${story.id}`}>{story.data.title}</a>
+                    </h2>
+                  </div>
+                  <p class="paper__dek">{story.data.dek}</p>
+                  <p class="paper__meta">
+                    <time datetime={story.data.publishedAt.toISOString()}>
+                      {fmtDate(story.data.publishedAt)}
+                    </time>
+                    <span>{story.data.readingTime} min read</span>
+                    {paper?.venue && <span class="paper__venue">{paper.venue}</span>}
+                    {paper?.id && <span class="paper__id">{paper.id}</span>}
+                  </p>
+                </div>
+                <div class="paper__aside">
+                  {paperSource ? (
+                    <a class="paper__link" href={paperSource.url} rel="noopener noreferrer" target="_blank">
+                      Read the paper
+                      <span aria-hidden="true">↗</span>
+                    </a>
+                  ) : (
+                    <span class="paper__meta-right">
+                      {story.data.sources.length} {story.data.sources.length === 1 ? 'source' : 'sources'}
+                    </span>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .research {
+    padding-bottom: var(--section-y);
+  }
+
+  .papers {
+    border-top: 1px solid var(--line);
+  }
+
+  .paper {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .paper {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 150px;
+    gap: var(--space-4);
+    align-items: start;
+    padding-block: var(--space-5);
+    transition: background-color var(--duration) var(--ease);
+  }
+
+  .paper:hover {
+    background: color-mix(in srgb, var(--paper-band) 60%, transparent);
+  }
+
+  .paper__index {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    padding-top: 5px;
+  }
+
+  .paper__main {
+    display: grid;
+    gap: 7px;
+    min-width: 0;
+  }
+
+  .paper__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .paper__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.125rem, 0.35vw + 1.05rem, 1.375rem);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+
+  .paper__title a {
+    transition: color var(--duration) var(--ease);
+  }
+
+  .paper__title a:hover {
+    color: var(--accent);
+  }
+
+  .paper__dek {
+    margin: 0;
+  }
+
+  .paper__meta {
+    margin: 0;
+  }
+
+  .paper__dek {
+    max-width: 66ch;
+    font-size: var(--text-ui);
+    line-height: 1.5;
+    color: var(--ink-mute);
+  }
+
+  .paper__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .paper__venue {
+    color: var(--sage-deep);
+  }
+
+  .paper__id {
+    color: var(--ink-soft);
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+
+  .paper__aside {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 3px;
+  }
+
+  .paper__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .paper__link:hover {
+    color: var(--accent);
+  }
+
+  .paper__meta-right {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 720px) {
+    .paper {
+      grid-template-columns: 32px minmax(0, 1fr);
+      gap: var(--space-3);
+      padding-block: var(--space-4);
+    }
+
+    .paper__aside {
+      grid-column: 2;
+      justify-content: flex-start;
+      padding-top: 2px;
+    }
+  }
+</style>

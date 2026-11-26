@@ -1,6 +1,7 @@
 ---
 title: "Z.ai's GLM-5.4 runs the same 28 layers twice to buy reasoning"
 dek: "The loop transformer adds depth without adding parameters, and Z.ai says the 750-billion-parameter model matches rivals several times larger."
+research: true
 channel: "llm"
 publishedAt: "2026-11-25T06:15:00+05:30"
 readingTime: 3
