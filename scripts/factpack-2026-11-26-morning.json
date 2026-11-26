@@ -1,0 +1,189 @@
+{
+  "edition": "morning",
+  "date": "2026-11-26",
+  "timezone": "Asia/Kolkata",
+  "note": "Morning edition filed at 06:00 IST on 26 November 2026. Stories cover announcements made on 24 and 25 November 2026. Set publishedAt to 2026-11-26T06:00:00+05:30 on every story. Set lead: true on the Kimi K3.1 Pro story only, and lead: false on every other story. All benchmark figures are vendor figures and must be attributed to the vendor at least once per story.",
+  "derived": [
+    "Claude Opus 5.5 trails GPT-6.2 Astra on family pass4 by 92.4 - 63.0 = 29.4 percentage points in the Humanity's First Exam technical report.",
+    "Kimi K3.1 Pro activates 104 billion of its 2.8 trillion parameters per token: 104 / 2800 = about 3.7 per cent of total parameters.",
+    "Kimi K3.1 Pro runs 16 of its 896 routed experts per token: 16 / 896 = about 1.8 per cent of experts.",
+    "ERNIE 5.5 Flash Preview trails Claude Opus 5.5 on Terminal-Bench 4.0 by 66.4 - 46.5 = 19.9 points."
+  ],
+  "stories": [
+    {
+      "slug": "moonshot-kimi-k3-1-pro-open-weights",
+      "channel": "llm",
+      "lead": true,
+      "angle": "A 2.8-trillion-parameter Chinese open-weight model now posts frontier-level agentic scores, but its own table shows large gaps in cybersecurity and science. The story is about what open weights at this scale mean when the vendor numbers are uneven rather than uniformly strong.",
+      "facts": [
+        "Moonshot AI published Kimi K3.1 Pro as an open-weight model on Hugging Face on 25 November 2026, under the Kimi K3.1 Pro License.",
+        "The model is a mixture-of-experts with 2.8 trillion total parameters and 104 billion activated per token, spread across 93 layers, of which one is dense.",
+        "Its attention is composed of 69 Kimi Delta Attention layers and 24 gated DeepSeek Sparse Attention layers. Compared with Kimi K3, Moonshot replaces the full-attention gated MLA layers with gated DSA layers for long-context efficiency.",
+        "It carries 896 experts, with 16 selected per token and two shared experts, a vocabulary of 160,000 tokens and a context window of 1,048,576 tokens.",
+        "Vision comes from a MoonViT-V2 encoder with 401 million parameters, so the model accepts text and images.",
+        "Weights are quantised to MXFP4 and activations to MXFP8, under quantization-aware training.",
+        "Moonshot says the model was post-trained from Kimi K3 with large-scale joint reinforcement learning across hundreds of downstream domains, and that it is the first model in the K3.1 series.",
+        "On Moonshot's own benchmark table, at maximum reasoning effort, the model scores 65.7 on Terminal-Bench 4.0 against 66.4 for Claude Opus 5.5, 51.7 on SWE Marathon v1.1 against 42.5 for GPT-6 Astra, 70.0 on HLE-Full with tools, 92.1 on BrowseComp and 43.2 on Agents' Last Exam.",
+        "The same table shows 74.7 on ExploitBench against 100 for GPT-6 Astra, 20.7 on ExploitGym against 42.4 for GPT-6 Astra, and 38.1 on Terminal-Bench-Science 0.1 against 68.1 for GPT-6 Astra.",
+        "On Moonshot's internal hallucination benchmark, where lower is better, the model records 8.3 with tools against 5.5 for GPT-6 Astra.",
+        "Moonshot recommends vLLM, SGLang or TokenSpeed for self-hosting, and offers an API at platform.kimi.ai with OpenAI-compatible and Anthropic-compatible endpoints.",
+        "The model's reasoning effort is set through a field that accepts low, high and max, defaulting to max.",
+        "Moonshot says multi-turn tool use requires passing the full assistant message back into the conversation, including the reasoning content and tool calls."
+      ],
+      "sources": [
+        {
+          "title": "moonshotai/Kimi-K3.1-Pro model card",
+          "url": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro",
+          "publisher": "Moonshot AI on Hugging Face",
+          "published": "2026-11-25"
+        },
+        {
+          "title": "Kimi K3.1 Pro technical blog",
+          "url": "https://www.kimi.ai/blog/kimi-k3-1-pro",
+          "publisher": "Moonshot AI",
+          "published": "2026-11-25"
+        }
+      ]
+    },
+    {
+      "slug": "deepmind-humanitys-first-exam-reliability-floor",
+      "channel": "ml",
+      "lead": false,
+      "angle": "Benchmarks have been measuring the ceiling. DeepMind measured the floor, and the floor is much lower than vendors' headline scores suggest. The interesting part is where the failures sit: image perception, not reasoning.",
+      "facts": [
+        "Google DeepMind launched a benchmark called Humanity's First Exam on Kaggle on 24 November 2026, announced in a blog post by research scientist Oran Kelly.",
+        "The dataset is 544 elementary text and image prompts across 20 foundational capabilities, grouped into four-prompt families built from one seed prompt and three variants, giving 136 families.",
+        "Seed prompts had to fail on at least one model in a calibration panel of Gemini 3.1 Flash-Lite, Gemini 3.1 Pro, Claude Opus 4.7, Claude Sonnet 4.6 and GPT-5.5 when written between May and June 2026.",
+        "The technical report evaluates 18 frontier and fast-tier models.",
+        "The top five models reach 96 per cent to 98 per cent on pass@1 and 100 per cent on family pass@4, yet average only 85.8 per cent on family pass4, with a range of 80.5 per cent to 92.4 per cent.",
+        "Family pass4 maxes out at 92.4 per cent for GPT-6.2 Astra, followed by 86.9 per cent for GPT-6.2 Sol and 85.8 per cent for Gemini 4 Neon.",
+        "GPT-6 Astra scores 83.4 per cent family pass4, Claude Fable 5.2 scores 73.7 per cent and Claude Opus 5.5 scores 63.0 per cent.",
+        "The Family Reliability Gap, the distance between family pass@4 and family pass4, ranged from 7.6 to 80.1 percentage points across the 18 models.",
+        "As a single-prompt example, the model must get a prompt right in all six rollouts, with partial credit for five and four correct; family pass4 requires 16 consecutive successes per family.",
+        "Failures are heavily concentrated in visual perception, which accounts for 73 per cent of wrong answers.",
+        "Extra test-time reasoning raises the reliability floor far less on image tasks than on text and symbolic tasks.",
+        "Google released a public subset of 112 prompts across 28 families under a CC-BY-4.0 licence and held back 432 prompts across 108 families.",
+        "A three-week Kaggle competition runs through 15 December 2026 and asks people to submit everyday questions that models still get wrong.",
+        "One public example prompt asks for the colour of the third letter of each word on a neon sign, in order; the answer given is green; yellow; white; blue; blue.",
+        "Google says frontier models made significant progress on the exam over the previous six months, and that the leaderboard is live on Kaggle."
+      ],
+      "sources": [
+        {
+          "title": "We're launching Humanity's First Exam and a Kaggle hackathon to test LLM reliability",
+          "url": "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/humanitys-first-exam/",
+          "publisher": "Google",
+          "published": "2026-11-24"
+        },
+        {
+          "title": "Humanity's First Exam: Measuring the Reliability Floor of LLMs (technical report)",
+          "url": "https://storage.googleapis.com/deepmind-media/papers/hfe_tech_paper.pdf",
+          "publisher": "Google DeepMind",
+          "published": "2026-11-24"
+        }
+      ]
+    },
+    {
+      "slug": "anthropic-messages-api-rust-rewrite",
+      "channel": "technology",
+      "lead": false,
+      "angle": "The rewrite is the least interesting part. The story is that verification, not code generation, became the constraint, and Anthropic turned its own production service into the test oracle. That is a reusable pattern for anyone migrating a live system with agents.",
+      "facts": [
+        "Anthropic published an engineering account on 25 November 2026 describing its migration of the Messages API from Python to Rust.",
+        "From early 2024 to autumn 2026, API traffic grew roughly 1,800 times.",
+        "Anthropic says the Rust API uses about 70 per cent less CPU per request and cuts median time to first token by about 20 per cent, without taking the service offline or freezing feature development.",
+        "An earlier partial rewrite moved only the code that parses a model's output into Rust and cut CPU usage by about 8 per cent to 10 per cent; Anthropic rejected it because each token crossed between Python and Rust three times.",
+        "Claude wrote a first version of the API's core request path in about a week.",
+        "By May 2026, Claude was writing more than 80 per cent of the code Anthropic merged.",
+        "The team had about 700 integration tests, but they ran the Python API in-process with mocked services, so a passing test could mean the test had been changed to let wrong code through; an audit found more than 100 weakened assertions.",
+        "Anthropic notes that 20 binary options make more than a million combinations, which it puts at 12 days of tests at a second each, for one model, before varying the prompts.",
+        "The Rust API passed about 98 per cent of its tests in April, yet only about a quarter of production inputs matched.",
+        "To compare the two systems, Anthropic shadowed production traffic: the model ran once and its output was replayed to both versions, so no request was billed twice and Claude's nondeterminism did not appear as a false difference.",
+        "Differences were logged as checkpoints and fingerprints rather than text, so engineers never read customer requests or replies; a fingerprint records where a difference began in the prompt and how many bytes it differed by.",
+        "A script grouped diff records every 10 to 30 minutes and alerted a coordinating agent only on a new kind of record, which then assigned a worker agent to that bug.",
+        "A memory loop recorded review corrections for later agents; in June an agent went through about 60 of the team's review comments, grouped the recurring problems into rules, and an engineer edited and approved them.",
+        "Permanent checks followed, including tests that failed when Rust drifted from Python and a merge check requiring anyone changing Python code to make a matching Rust change or request an exemption.",
+        "Anthropic states its conclusion plainly: verification, not generation, had become the bottleneck."
+      ],
+      "sources": [
+        {
+          "title": "Migrating our Messages API to Rust",
+          "url": "https://www.anthropic.com/research/migrating-api-to-rust",
+          "publisher": "Anthropic",
+          "published": "2026-11-25"
+        }
+      ]
+    },
+    {
+      "slug": "openai-chatgpt-codex-shared-usage-allowance",
+      "channel": "ai",
+      "lead": false,
+      "angle": "A billing change described as a product merge. Chat and Work become one meter in December, measured in tokens, with Instant carved out. Worth telling subscribers what changes and what the company will not say: the size of the new allowance.",
+      "facts": [
+        "OpenAI's help centre page on ChatGPT and Codex usage limits says that starting in December, the usage allowance on Plus, Pro and Business plans will be shared across ChatGPT and Codex.",
+        "OpenAI says the change accompanies bringing the agentic capabilities of Work into the main ChatGPT experience.",
+        "Usage will be measured in tokens, the units of information a model processes and generates, rather than in messages.",
+        "OpenAI says more advanced models and complex tasks generally use more of the allowance.",
+        "Instant chat will not draw from the shared usage allowance.",
+        "OpenAI says it expects most users will not need to wait for their usage to reset more often than they do now.",
+        "Users will see combined remaining usage and reset times in Settings, under Usage.",
+        "At the limit, OpenAI lists three options: wait for the reset, upgrade the plan, or buy credits for eligible features.",
+        "OpenAI says a small group of users may see the usage changes before December, so it can learn from early feedback before expanding more broadly.",
+        "TechCrunch reported on 25 November 2026 that OpenAI began rolling out a unified Chat and Work experience to a small group of Pro subscribers.",
+        "ChatGPT product lead Thibault Sottiaux announced the limited rollout in a post on X on 24 November 2026.",
+        "An OpenAI spokesperson told TechCrunch that most users are not expected to face more frequent usage resets, but that a small fraction of the heaviest users may hit their limits sooner.",
+        "The spokesperson said OpenAI will keep working on efficiency so subscribers get more out of their plans.",
+        "OpenAI's help centre does not state the size of the new shared allowance."
+      ],
+      "sources": [
+        {
+          "title": "Understanding ChatGPT and Codex usage limits",
+          "url": "https://help.openai.com/en/articles/20001625-understanding-chatgpt-and-codex-usage-limits",
+          "publisher": "OpenAI",
+          "published": "2026-11-25"
+        },
+        {
+          "title": "OpenAI says heavy ChatGPT users may hit limits sooner as it merges Chat and Work",
+          "url": "https://techcrunch.com/2026/11/25/openai-says-heavy-chatgpt-users-may-hit-limits-sooner-as-it-merges-chat-and-work/",
+          "publisher": "TechCrunch",
+          "published": "2026-11-25"
+        }
+      ]
+    },
+    {
+      "slug": "baidu-ernie-5-5-flash-preview-open-weights",
+      "channel": "llm",
+      "lead": false,
+      "angle": "Baidu's permissive licence is the news, not the benchmark scores: Apache 2.0 on a 280-billion-parameter model with a million-token context, released unfinished and labelled as such. The honest framing is a company shipping a work in progress under terms developers can actually use.",
+      "facts": [
+        "Baidu published ERNIE 5.5 Flash Preview on Hugging Face on 24 November 2026 under the Apache License 2.0, which covers the preview weights only; the ERNIE 5.5 Flash Base it was built from remains under a separate licence.",
+        "The model is a mixture-of-experts with 280 billion total parameters and 14 billion active per token, and a context window of 1,048,576 tokens.",
+        "It has 43 layers, one dense and 42 mixture-of-experts, with 512 routed experts and a top-10 selection plus one shared expert, and a vocabulary of 201,216 tokens.",
+        "It is text in, text out.",
+        "Precision is blockwise FP8 with routed experts in MXFP4 under quantization-aware training, an FP8 KV cache and an FP4 indexer.",
+        "A DSpark draft head provides speculative decoding to speed up long agent tasks.",
+        "Baidu describes the preview as an intermediate checkpoint from post-training, says some capabilities may still fall short because training is not finished, and says post-training is ongoing.",
+        "Baidu says that in a single 11-hour coding task the model wrote a complete third-person wuxia game in C++ on Unreal Engine 5.8, and that from game design documents it built nearly 100 mobile mini-games.",
+        "Baidu says it trained the model in 300,000 workspaces for domains such as finance and law, holding 10 million reference files in more than 40 file types.",
+        "Baidu says the model was trained in more than 150,000 creation environments for tasks including popular-science explainers and motion comics.",
+        "On Baidu's own evaluation table, the model scores 46.5 on Terminal-Bench 4.0 against 66.4 for Claude Opus 5.5 and 56.1 for GPT-6.1 Sol, 71.2 on DeepSWE v1.1, 87.4 on BrowseComp and 46.4 on HLE without tools.",
+        "Baidu's table also shows 61.9 on AutomationBench, 84.9 on DRACO and 67.9 on OfficeQA Pro V2.",
+        "Thinking is on by default and can be switched off, with reasoning effort set to low, medium or high, defaulting to high.",
+        "The weights are also published on ModelScope, with FP8 and BF16 repositories for hardware without FP4 kernels."
+      ],
+      "sources": [
+        {
+          "title": "baidu/ERNIE-5.5-Flash-Preview model card",
+          "url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
+          "publisher": "Baidu on Hugging Face",
+          "published": "2026-11-24"
+        },
+        {
+          "title": "ERNIE 5.5 Flash Preview release",
+          "url": "https://ernie.baidu.com/release/ernie-5-5-flash-preview/",
+          "publisher": "Baidu ERNIE Team",
+          "published": "2026-11-24"
+        }
+      ]
+    }
+  ]
+}
