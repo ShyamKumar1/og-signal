@@ -74,13 +74,22 @@ const locale = SITE.locale.replace('_', '-');
 
     <script is:inline>
       (function () {
-        try {
-          var stored = localStorage.getItem('og-theme');
-          if (stored === 'dark') document.documentElement.dataset.theme = 'dark';
-        } catch (error) {
-          /* no storage: follow the system on the next visit */
+        // Theme is stored on the <html> element. Astro's client router replaces that
+        // element's attributes on every navigation, so the stored choice has to be
+        // re-applied after each swap or the site falls back to light mid-session.
+        function applyTheme() {
+          try {
+            var stored = localStorage.getItem('og-theme');
+            if (stored === 'dark') document.documentElement.dataset.theme = 'dark';
+            else delete document.documentElement.dataset.theme;
+          } catch (error) {
+            /* no storage: follow the system theme */
+          }
+          document.documentElement.classList.add('js');
         }
-        document.documentElement.classList.add('js');
+
+        applyTheme();
+        document.addEventListener('astro:after-swap', applyTheme);
       })();
     </script>
   </head>
