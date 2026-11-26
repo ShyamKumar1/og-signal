@@ -62,9 +62,9 @@ if [[ $DEPLOY -eq 1 ]]; then
   echo "→ deploying"
   netlify deploy --prod --dir=dist --message "wire $(date +%F) $SLOT"
 
-  echo "→ notifying on WhatsApp"
+  echo "→ notifying the owner"
   # A failed alert must never fail a published run, so this is allowed to warn.
-  node "$REPO/scripts/notify.mjs" --files "$WORK"/stories/*.md || echo "⚠ WhatsApp alert failed — stories are live anyway"
+  node "$REPO/scripts/notify.mjs" --files "$WORK"/stories/*.md || echo "⚠ alert failed — stories are live anyway"
 fi
 
 echo "✓ run complete: $WORK"

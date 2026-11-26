@@ -6,9 +6,13 @@
  *   node scripts/notify.mjs --files a.md b.md [--dry-run]
  *   node scripts/notify.mjs --since HEAD~1 [--dry-run]
  *
- * Reads story frontmatter, builds one short WhatsApp message and sends it.
- * Providers are chosen with WHATSAPP_PROVIDER:
+ * Reads story frontmatter, builds one short message and sends it to the owner.
+ * Providers are chosen with WHATSAPP_PROVIDER (the name is legacy — Telegram
+ * is the default channel):
  *
+ *   telegram   (default when TELEGRAM_BOT_TOKEN is present) Bot API sendMessage
+ *              to TELEGRAM_CHAT_ID, falling back to WHATSAPP_TO then
+ *              TELEGRAM_HOME_CHANNEL. Plain text, no preview.
  *   callmebot  (default if WHATSAPP_CALLMEBOT_KEY and WHATSAPP_TO are set)
  *              Free personal alerts. The recipient sends "I allow callmebot to
  *              send me messages" to +34 644 51 95 23 on WhatsApp, gets an API
@@ -145,9 +149,16 @@ if (message.length > MAX) {
 
 const provider =
   process.env.WHATSAPP_PROVIDER ||
-  (process.env.WHATSAPP_CALLMEBOT_KEY ? 'callmebot' : process.env.TWILIO_ACCOUNT_SID ? 'twilio' : 'log');
+  (process.env.TELEGRAM_BOT_TOKEN && (process.env.TELEGRAM_CHAT_ID || process.env.TELEGRAM_HOME_CHANNEL)
+    ? 'telegram'
+    : process.env.WHATSAPP_CALLMEBOT_KEY
+      ? 'callmebot'
+      : process.env.TWILIO_ACCOUNT_SID
+        ? 'twilio'
+        : 'log');
 
 const to = (process.env.WHATSAPP_TO || '').replace(/[^\d+]/g, '');
+const chatId = process.env.TELEGRAM_CHAT_ID || process.env.WHATSAPP_TO || process.env.TELEGRAM_HOME_CHANNEL || '';
 
 // ---------------------------------------------------------------- providers
 
@@ -213,7 +224,28 @@ async function sendTwilio() {
   return json.sid ?? 'sent';
 }
 
-const senders = { callmebot: sendCallmebot, cloud: sendCloud, twilio: sendTwilio };
+async function sendTelegram() {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  if (!token) throw new Error('telegram needs TELEGRAM_BOT_TOKEN');
+  if (!chatId) throw new Error('telegram needs TELEGRAM_CHAT_ID (or TELEGRAM_HOME_CHANNEL / WHATSAPP_TO)');
+  const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: message,
+      disable_web_page_preview: true,
+      disable_notification: false,
+    }),
+  });
+  const json = await response.json().catch(() => ({}));
+  if (!response.ok || json?.ok === false) {
+    throw new Error(`telegram ${response.status}: ${JSON.stringify(json).slice(0, 200)}`);
+  }
+  return `message_id ${json?.result?.message_id ?? 'sent'}`;
+}
+
+const senders = { telegram: sendTelegram, callmebot: sendCallmebot, cloud: sendCloud, twilio: sendTwilio };
 
 if (dryRun || provider === 'log') {
   console.log(`notify: dry run (provider would be "${provider}")\n\n${message}`);
@@ -228,7 +260,7 @@ if (!sender) {
 
 try {
   const result = await sender();
-  console.log(`notify: sent ${stories.length} story story-summary via ${provider} — ${result}`);
+  console.log(`notify: sent ${stories.length} ${stories.length === 1 ? 'story' : 'stories'} via ${provider} — ${result}`);
 } catch (error) {
   console.error(`notify: send failed — ${error.message}`);
   process.exit(1);
