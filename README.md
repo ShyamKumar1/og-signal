@@ -19,10 +19,11 @@ times a day and nothing goes up that has not passed the check.
 | `/` | The newest story, a panel of everything added today, today's stories with a topic filter, one section per topic, then earlier stories. |
 | `/latest` | Every story, grouped by the day it was published, newest first. |
 | `/channel/ai`, `/llm`, `/ml`, `/technology` | One topic's full history, with its own RSS feed. |
+| `/research` | Papers, preprints and technical reports. Cross-cutting: a paper on language models is filed under Language Models and also appears here. Own feed at `/research/rss.xml`. |
 | `/story/<slug>` | A single story: reading progress, a table of contents, its sources, and a verification note. |
 | `/search` | Full-text search over every story, built with Pagefind at build time. |
 | `/about`, `/editorial`, `/corrections` | How the site is made, the rules it follows, and a public corrections log. |
-| `/rss.xml`, `/channel/<slug>/rss.xml` | Feeds. |
+| `/rss.xml`, `/channel/<slug>/rss.xml`, `/research/rss.xml` | Feeds. |
 | `/api/stories.json` | Every published story as JSON. |
 | `/llms.txt` | A plain-text map of the site for language models. |
 | `/editions`, `/editions/<date>` | Retired routes. They exist only to send old links to `/latest`. |
@@ -47,6 +48,15 @@ topic and by day, which is what a reader actually uses.
 
 The promise in one line: the prose is machine-drafted, the facts are sourced and dated, and the
 checking step has no override.
+
+## Research coverage
+
+Stories whose primary source is a paper, preprint or technical report are marked `research: true`.
+They appear at `/research`, in its RSS feed, on the homepage under "From the papers", and still sit
+under their own topic. When the factpack carries paper details, a `paper:` block adds the title,
+venue and arXiv id or DOI, which renders as a paper card on the story page and as a "Read the paper"
+link in the research list. Nothing about a venue or an identifier is ever inferred — if the factpack
+does not have it, the field is left out.
 
 ## Repository layout
 
@@ -143,6 +153,12 @@ skips the alert.
 title: "Sentence case, 40-110 chars, no question mark"
 dek: "One sentence, 70-260 chars, adds information the title does not repeat"
 channel: "ai" | "llm" | "ml" | "technology"
+research: false           # true when the primary source is a paper, preprint or technical report
+paper:                    # optional; both fields only when the factpack has them
+  title: "Exact paper title"
+  venue: "Conference, journal or lab"
+  id: "arXiv:2511.00000 or DOI"
+  url: "https://arxiv.org/abs/2511.00000"
 publishedAt: "2026-11-26T06:00:00+05:30"
 readingTime: 3
 tags: ["lowercase", "two-to-five"]
