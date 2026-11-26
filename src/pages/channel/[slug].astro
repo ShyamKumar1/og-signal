@@ -49,13 +49,13 @@ const schema = {
   <section class="channel">
     <div class="container">
       <header class="page-head">
-        <Kicker label={channel.short} text={`Channel 0${position} of 0${CHANNEL_LIST.length}`} />
+        <Kicker label={channel.short} text={`Topic 0${position} of 0${CHANNEL_LIST.length}`} />
         <h1>{channel.label}</h1>
         <p class="lede">{channel.blurb}</p>
         <p class="page-head__meta">
           <span>{stories.length} {stories.length === 1 ? 'story' : 'stories'}</span>
           <span>{sourceCount} sources linked</span>
-          <span>Files in IST</span>
+          <span>Newest first</span>
         </p>
         <div class="page-head__actions">
           <a class="link-arrow" href={feed}>
