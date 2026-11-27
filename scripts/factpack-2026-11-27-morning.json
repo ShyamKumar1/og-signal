@@ -1,0 +1,160 @@
+{
+  "edition": "morning",
+  "date": "2026-11-27",
+  "timezone": "Asia/Kolkata",
+  "note": "Filed at 06:00 IST on 27 November 2026. Set publishedAt to 2026-11-27T06:00:00+05:30 on every story. Set lead: true on the GigaChat 4 story only, and lead: false on every other story. Four stories: two model releases with open weights (one Russian, one Indian), one open-weight image model, and one research paper on multi-image benchmarks. All benchmark figures are vendor or author figures and must be attributed at least once per story. Nothing here repeats a story already published on the site: the GigaChat 4, Patram 1.5, Ming-Image and ASTERISM releases all landed after the previous filing on 26 November at 14:00 IST.",
+  "derived": [
+    "GigaChat 4 708B activates 41 billion of its 708 billion parameters per token: 41 / 708 = about 5.8 per cent.",
+    "GigaChat 4 37B activates about 3.8 billion of its 37 billion parameters per token: 3.8 / 37 = about 10.3 per cent.",
+    "GigaChat 4 708B selects 8 of 256 routed experts per token: 8 / 256 = 3.1 per cent of the expert pool.",
+    "ASTERISM's audit covered about 33,000 items and found 24.2 per cent answerable from one image: 0.242 x 33,000 = about 7,986 items.",
+    "ASTERISM keeps 18.7k items from about 33k audited: 18.7 / 33 = about 56.7 per cent survival rate.",
+    "ASTERISM corrected or rewrote 2.0k of its 18.7k items: 2.0 / 18.7 = about 10.7 per cent.",
+    "GigaChat 4 708B scores 69.66 on Terminal-Bench 2.1 against GLM-5.3's 88.70, a gap of 88.70 - 69.66 = 19.04 points."
+  ],
+  "stories": [
+    {
+      "slug": "sber-gigachat-4-708b-open-weights",
+      "channel": "llm",
+      "lead": true,
+      "research": false,
+      "angle": "Sber shipped the largest open-weight model any European or Russian lab has published, under MIT, with a million-token context and a single checkpoint that does both instant and reasoning answers. The interesting part is not the size: it is that the model loses to Chinese open models on the hardest coding and science benchmarks while beating them on tool use and long-context retrieval. Read the tables as vendor figures.",
+      "facts": [
+        "Sber presented GigaChat 4 at its AI Journey conference on 26 November 2026.",
+        "GigaChat 4 comprises two models: a flagship with 708 billion total parameters and about 41 billion active per token, and a compact model with 37 billion total parameters and about 3.8 billion active per token.",
+        "The flagship has 64 decoder layers and a hidden size of 7,168, with 48 linear-attention layers and 16 sparse-attention layers.",
+        "Each mixture-of-experts layer in the flagship holds 256 routed experts and one shared expert, and selects 8 routed experts per token.",
+        "The architecture interleaves Gated DeltaNet layers with multi-head latent attention layers that use DeepSeek Sparse Attention, in a 3:1 ratio.",
+        "DeepSeek Sparse Attention selects up to 2,048 earlier positions per query instead of attending over the whole sequence.",
+        "The context window is 1,048,576 tokens and was extended from 32K to 128K and then to 1M tokens, with sparse attention introduced at 128K through indexer-only training and joint optimisation of the indexer and backbone at 1M.",
+        "Both models answer in an instant mode or a reasoning mode, selectable per request, from a single checkpoint; GigaChat 3.5 shipped these as separate checkpoints.",
+        "The 708B model is released under the MIT licence, while the 37B model uses a non-commercial licence for individuals.",
+        "Weights are published on Hugging Face in FP8, BF16 and GGUF formats, as base models, instruction-tuned models and intermediate base checkpoints.",
+        "Sber reports 80.89 per cent on SWE-bench Verified in reasoning mode, 88.82 per cent on LiveCodeBench v6, 71.26 per cent on Terminal-Bench 2.0, 82.83 per cent on GPQA Diamond and 23.91 per cent on Humanity's Last Exam without tools.",
+        "On Terminal-Bench 2.1 the flagship scores 69.66 per cent against 88.70 per cent for GLM-5.3.",
+        "On SWE-bench Verified the flagship scores 80.89 per cent against 86.67 per cent for GLM-5.3.",
+        "On the agentic benchmarks Sber reports 79.55 on BFCL v4 against 68.29 for GLM-5.3, 83.31 on τ²-Bench, and 70.33 on AA-LCR against 66.70 for GLM-5.3.",
+        "Sber reports 74.92 on GraphWalks for the flagship, against 38.00 for its own GigaChat 3.5 Ultra 432B.",
+        "Sber trained a diffusion drafter called DFlash2 from scratch: a separate five-layer BF16 drafter that predicts tokens in parallel over blocks of eight positions.",
+        "The model also supports a recurrent multi-token-prediction drafter that reuses one prediction layer across draft steps, which Sber says cuts drafter parameters by about three times against GigaChat 3.5's three independent blocks.",
+        "Training stability measures include progressive residual warm-up, projection-specific z-loss and logit softcapping, and dynamic learning-rate rescaling for individual mixture-of-experts blocks when expert-load imbalance persists.",
+        "The 37B model was trained with μP, used to pick hyperparameters on a model ten times smaller and transfer them by width and depth scaling rules, and with the Muon optimiser.",
+        "After supervised fine-tuning, Sber trained expert models with reinforcement learning on mathematics, coding, tool use and multi-turn agent workflows, then consolidated them into one model through multi-teacher on-policy distillation.",
+        "Sber says the model runs in agent harnesses including Claude Code, Codex CLI, pi, the DeepSeek harness and OpenHands.",
+        "In demos published with the launch, the flagship edited the palette of a NES Mario cartridge dump by changing bytes in the binary and ran the game on a Mac M4, produced an STL file for a 3D-printable vase, and wrote a music track through MCP access to the Cadenza digital audio workstation.",
+        "Sber publishes a technical report for the 708B model, and says a separate report for the 37B model will follow."
+      ],
+      "sources": [
+        {
+          "title": "GigaChat 4: Two Powerful Models, One Million Tokens, and New Agentic Capabilities",
+          "url": "https://giga.chat/blog/en/posts/gigachat-4",
+          "publisher": "Sber, GigaChat blog",
+          "published": "2026-11-26"
+        },
+        {
+          "title": "ai-sage/GigaChat4-708B-A41B model card",
+          "url": "https://huggingface.co/ai-sage/GigaChat4-708B-A41B",
+          "publisher": "Hugging Face",
+          "published": "2026-11-26"
+        }
+      ]
+    },
+    {
+      "slug": "bharatgen-patram-1-5-document-vision-model",
+      "channel": "ai",
+      "lead": false,
+      "research": false,
+      "angle": "An Indian consortium released a document model small enough for a bank to run on its own hardware, and the design decisions are the story: it reads the page as an image instead of trusting an OCR step, and it was trained to report what it cannot read. The benchmark comparison is BharatGen's own, on a benchmark it is about to publish.",
+      "facts": [
+        "BharatGen launched Patram 1.5 on 26 November 2026 in New Delhi.",
+        "Patram 1.5 is a 7-billion-parameter vision-language foundation model released as open weights on Hugging Face.",
+        "The model reads documents as images, including scans, photographs of pages and forms, and also handles photographs and diagrams and several images in one request.",
+        "It returns text including Markdown, HTML and JSON.",
+        "It supports English and English mixed with Indian languages, with a context length of up to 32K tokens.",
+        "BharatGen calls its approach OCR 3.0: a user describes in plain language only the information needed, and the model returns it in the structure the user's own systems use.",
+        "The model was trained to state what it cannot read and why when a field is blank or a figure is illegible, rather than guessing, and to flag any reasonable guess for a person to check.",
+        "When a question is ambiguous, such as a date on a bill that shows several dates, the model asks which one is meant.",
+        "BharatGen evaluated Patram 1.5 on 49 tests: 34 public benchmarks and 15 tasks from PatramBench, its own benchmark built from 8,773 pages of Indian documents.",
+        "PatramBench contains 11,828 test items and is to be released on Hugging Face in the coming days.",
+        "The evaluation covered 20 other image-reading models, both specialist and general-purpose, of up to 763 billion parameters, and seven specialist OCR systems.",
+        "Patram 1.5 is available on the BharatGen Playground, which offers Chat plus ready-made Parse, Extract, Classify, Split and Section tools, with Digitize, Translate and Edit announced as coming soon.",
+        "BharatGen began the Patram family with Patram 1 in June 2025.",
+        "BharatGen is a Section 8 not-for-profit AI company backed by the Department of Science and Technology and the IndiaAI Mission under MeitY, established in October 2024, anchored at IIT Bombay and drawing on a consortium of nine Indian academic institutions.",
+        "BharatGen chief executive Rishi Bal said: \"A model alone can only take you so far. The BharatGen Playground gives the world a full stack for document intelligence, with models, solutions and workflows working together.\"",
+        "Consortium member Ravi Kiran Sarvadevabhatla, a professor at IIIT Hyderabad, said: \"With Patram 1.5 and BharatGen Playground, we chart a new capability frontier for sovereign vision models and document understanding workflows.\""
+      ],
+      "sources": [
+        {
+          "title": "BharatGen launches Patram 1.5, an Indian vision-language model for documents and images",
+          "url": "https://bharatgen.com/assets/media-kit/files/press/patram-1-5-press-release.pdf",
+          "publisher": "BharatGen",
+          "published": "2026-11-26"
+        }
+      ]
+    },
+    {
+      "slug": "ming-image-0-2-design-open-weights",
+      "channel": "ai",
+      "lead": false,
+      "research": false,
+      "angle": "Ant Group's image model arrived as a repository drop with no launch post, and by the next morning it sat top of the open-weight text-to-image board. The catch is hardware: the validated setup is a single 80GB card, and the layer-splitting model shown in the demos is not in the download yet.",
+      "facts": [
+        "Ant Group's inclusionAI published Ming-Image-0.2-Design, a text-to-image model for graphic design work, under the MIT licence.",
+        "The model card was updated on 26 November 2026 and says the release improves complex composition, lighting and text rendering over Ming-Image-0.1-Design.",
+        "The card names three intended uses: e-commerce hero images, drafts of user interfaces and websites, and spatial renderings such as interiors.",
+        "The model card states that Ming-Image-0.2-Design ranks first among open-weight models on Artificial Analysis's overall text-to-image leaderboard, as of 25 November 2026, on the AA-Image-T2I v2.1 evaluation.",
+        "The card describes those leaderboard results as preliminary, from 23 November.",
+        "The validated hardware configuration is one CUDA GPU with 80 GiB of VRAM in BF16, and the recommended serving framework is vLLM-Omni.",
+        "Recommended settings are 12 sampling steps, a CFG scale of 1.0 and a default size of 2048 by 2048 pixels, with 2560 by 1440, 2432 by 1824 and 1664 by 2496 offered for 2K-level output and 1024 by 1024 for faster square generation.",
+        "The model card lists the architecture as BailingMM2NativeForConditionalGeneration, and the release tags include graphic design, text rendering and RGBA output.",
+        "Prompt enhancement can be run with Ling-3.0-flash-VL or qwen3.8-27B, and the model works with Ling-3.2-flash to turn design concepts into interactive web pages.",
+        "A companion model, Ming-Image-0.2-Design-Layer, is announced to split a finished design into transparent layers, and the card says its weights are due next week.",
+        "Until that release, the card still points layer decomposition to the previous Ming-Image-0.1-Design-Layer model."
+      ],
+      "sources": [
+        {
+          "title": "inclusionAI/Ming-Image-0.2-Design model card",
+          "url": "https://huggingface.co/inclusionAI/Ming-Image-0.2-Design",
+          "publisher": "Hugging Face",
+          "published": "2026-11-26"
+        }
+      ]
+    },
+    {
+      "slug": "asterism-multi-image-benchmark-audit",
+      "channel": "ml",
+      "lead": false,
+      "research": true,
+      "paper": {
+        "title": "ASTERISM: Do Multimodal LLMs Actually Look at All the Images?",
+        "venue": "arXiv preprint, cs.CV",
+        "id": "arXiv:2611.32316",
+        "url": "https://arxiv.org/abs/2611.32316"
+      },
+      "angle": "A quarter of the items on the benchmarks used to test multi-image reasoning can be answered from a single image, and the models take that shortcut even when it does not work. The fix the authors propose changes how training credit is assigned, which is a narrower claim than saying multimodal models cannot reason across images.",
+      "facts": [
+        "The paper audits about 33,000 items drawn from 19 public multi-image benchmarks.",
+        "A two-stage single-image filter found that one image, or the question alone, settles 24.2 per cent of those items.",
+        "On those items, multimodal models recover from one image a median 78 per cent of the accuracy that all images together add over text alone, which the authors call the single-image shortcut.",
+        "The authors report that models take the shortcut even on items where one image is not enough, and that on such items most wrong answers repeat an answer the model gives from one image, at a rate above chance.",
+        "The authors build ASTERISM by keeping only the items that need more than one image: 18.7k items, 2.0k of them corrected or rewritten, under one format, one scorer and seven task categories.",
+        "They release ASTERISM-Train with 49k training items, and ASTERISM-Lite, a hard subset whose items were verified by hand one by one.",
+        "On ASTERISM-Lite the strongest proprietary multimodal model scores 68 per cent.",
+        "The authors argue that reinforcement learning with verifiable rewards rewards the shortcut, because an answer read off one image earns the same reward as one that combines images, and they find existing RLVR objectives add little to the ASTERISM score.",
+        "They propose cross-image credit assignment, CICA, an extension of RLVR that moves credit toward the tokens that need more than one image.",
+        "On three open-source multimodal models, CICA raises the ASTERISM score by 2.6 to 6.0 points, which the authors say is more than twice the gain of each general and vision-specific reinforcement learning objective trained on the same data.",
+        "The paper was submitted on 24 November 2026 and appeared in arXiv's new listings on 26 November 2026.",
+        "The authors are Chanseul Cho, Dongwoo Kim, Noori Bae, Seungjae Moon, Seongsu Lee and Youngmin Ro.",
+        "Code and datasets are published at github.com/chanseul01/ASTERISM."
+      ],
+      "sources": [
+        {
+          "title": "ASTERISM: Do Multimodal LLMs Actually Look at All the Images?",
+          "url": "https://arxiv.org/abs/2611.32316",
+          "publisher": "arXiv",
+          "published": "2026-11-24"
+        }
+      ]
+    }
+  ]
+}
